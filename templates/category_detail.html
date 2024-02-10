@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ category.title }}{% endblock %}
+
+{% block content %}
+    <h1 class="title">{{ category.title }}</h1>
+    
+    {% for post in category.posts.all %}
+        <article style="margin: 20px;">
+            <h2 class="subtitle">{{ post.title }}</h2>
+            
+            <time class="is-size-7 has-text-grey">{{ post.created_at | date:"d M, y H:i" }}</time>
+
+            <p>{{ post.intro }}</p>
+
+            <a href="{% url 'post_detail' post.slug %}">Read more</a>
+        </article>
+    {% endfor %}
+{% endblock %}
