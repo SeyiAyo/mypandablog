@@ -1,37 +1,53 @@
 {% extends 'base.html' %}
 {% block title %}Post Detail{% endblock %}
 {% block content %}
-    <article>
-        <h1 class="title">{{ post.title }}</h1>
+<section class="hero">
+    <div class="hero-body">
+        <div class="container">
+            <section class="section">
+                <div class="columns">
+                    <div class="column is-8 is-offset-2">
+                        <div class="content is-medium">
+                            <h2 class="subtitle is-6">{{ post.created_at | date:"M d, Y" }}</h2>
+                            <h1 class="title">{{ post.title }}</h1>
+                            <p><strong>{{ post.intro }}</strong></p>
+                            <p>{{ post.content }}</p>
 
-        <time class="is-size-7 has-text-grey">{{ post.created_at | date:"d M, y H:i" }}</time> - <span><a href="{% url 'category_detail' post.category.slug %}">{{ post.category.title }}</a></span>
 
-        <p><strong>{{ post.intro }}</strong></p>
+                            <hr>
 
-        <p>{{ post.content }}</p>
+                            <h2 class="subtitle is-4">Comments</h2>
 
+                            <form action="" method="post" class="mb-6">
+                                {% csrf_token %}
 
+                                {{ form.as_p }}
 
-        <h2><strong>Comments</strong></h2>
+                                <div class="field">
+                                    <div class="control">
+                                        <button class="button is-success" type="submit">Submit</button>
+                                    </div>
+                                </div>
+                            </form>
 
-        {% if not post.comments.all %}
-            <p>No comments yet</p>
-        {% endif %}
+                            {% if not post.comments.all %}
+                                <p>No comments yet</p>
+                            {% endif %}
 
-        {% for comment in post.comments.all %}
-            <article>
-                <strong>{{ comment.name }} at {{ comment.created_at }}</strong><br>
-                {{ comment.content }}
-            </article>
-        {% endfor %}
+                            {% for comment in post.comments.all %}
+                                <article class="media box">
+                                    <div class="media-content">
+                                        <strong>{{ comment.name }}</strong> <small>{{ comment.created_at | timesince }} ago</small><br>
+                                        {{ comment.content }}
+                                    </div>
+                                </article>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</section>
 
-        <h2>Add Comment</h2>
-        <form action="" method="post">
-            {% csrf_token %}
-
-            {{ form.as_table }}
-
-            <input type="submit" value="Add Comment">
-        </form>
-    </article>
 {% endblock %}
