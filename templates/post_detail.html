@@ -13,6 +13,7 @@
                             <p><strong>{{ post.intro }}</strong></p>
                             <p>{{ post.content }}</p>
 
+                            <p><small>Category: <a href="{% url 'category_detail' post.category.slug %}">{{ post.category.title }}</a></small></p>
 
                             <hr>
 

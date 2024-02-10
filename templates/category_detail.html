@@ -6,14 +6,23 @@
     <h1 class="title">{{ category.title }}</h1>
     
     {% for post in category.posts.all %}
-        <article style="margin: 20px;">
-            <h2 class="subtitle">{{ post.title }}</h2>
-            
-            <time class="is-size-7 has-text-grey">{{ post.created_at | date:"d M, y H:i" }}</time>
-
-            <p>{{ post.intro }}</p>
-
-            <a href="{% url 'post_detail' post.slug %}">Read more</a>
-        </article>
+        <section class="hero">
+            <div class="hero-body">
+                <div class="container">
+                    <section class="section">
+                        <div class="columns">
+                            <div class="column is-8 is-offset-2">
+                                <div class="content is-medium">
+                                    <h2 class="subtitle is-6">{{ post.created_at | date:"M d, Y" }}</h2>
+                                    <h1 class="title">{{ post.title }}</h1>
+                                    <p>{{ post.intro }}</p>
+                                    <a href="{% url 'post_detail' post.slug %}">Read more</a>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </section>
     {% endfor %}
 {% endblock %}
