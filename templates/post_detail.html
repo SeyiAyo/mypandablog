@@ -11,6 +11,11 @@
                             <h2 class="subtitle is-6">{{ post.created_at | date:"M d, Y" }}</h2>
                             <h1 class="title">{{ post.title }}</h1>
                             <p><strong>{{ post.intro }}</strong></p>
+                            {% if post.image %}
+                                <figure class="image">
+                                    <img src="{{ post.image.url }}" alt="{{ post.title }}">
+                                </figure>
+                            {% endif %}
                             <p>{{ post.content }}</p>
 
                             <p><small>Category: <a href="{% url 'category_detail' post.category.slug %}">{{ post.category.title }}</a></small></p>

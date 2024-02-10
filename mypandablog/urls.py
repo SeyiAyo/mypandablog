@@ -16,13 +16,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-
-from blog.views import frontpage, about, post_detail, category_detail
+from django.conf import settings
+from django.conf.urls.static import static
+from blog.views import frontpage, about, post_detail, category_detail, search
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', frontpage, name='frontpage'),
     path('about/', about, name='about'),
+    path("search/", search, name="search"),
     path('<slug:slug>/', post_detail, name='post_detail'),
     path('category/<slug:slug>/', category_detail, name='category_detail'),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

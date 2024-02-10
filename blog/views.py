@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.shortcuts import render, redirect
 from .models import Post, Category
 from .forms import CommentForm
@@ -55,6 +56,6 @@ def category_detail(request, slug):
 def search(request):
     query = request.GET.get('query', '')
     
-    posts = Post.objects.filter(title__icontains=query)
+    posts = Post.objects.filter(status=Post.ACTIVE).filter(Q(title__icontains=query) | Q(content__icontains=query) | Q(intro__icontains=query))
     
     return render(request, 'search.html', {'query': query, 'posts': posts})
