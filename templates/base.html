@@ -6,6 +6,7 @@
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <title>myPanda Blog | {% block title %}{% endblock %}</title>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 
         <style>
             nav.navbar {
@@ -17,14 +18,51 @@
 
     <body>
         <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
-            <div class="navbar-brand">
-                <a class="navbar-item" href="/">myPanda Blog</a>
+            <div class="container" style="margin-left: 40px;">
+                <div class="navbar-brand">
+                    <a class="navbar-item" href="/">
+                        <strong>myPanda Blog</strong>
+                    </a>
+                    <span class="navbar-burger burger" data-target="navbarMenu">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </span>
+                </div>
+            </div>
+
+            <div id="navbarMenu" class="navbar-menu">
+                <div class="navbar-end">
+                    <div class="navbar-item">
+                        <div class="control has-icons-left">
+                            <input class="input is-rounded" type="text" placeholder="Search">
+                            <span class="icon is-left">
+                                <i class="fas fa-search"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <a href="/" class="navbar-item">Home</a>
+                    <a href="/" class="navbar-item">Featured</a>
+                    <a href="/about" class="navbar-item">About</a>
+                </div>
             </div>
         </nav>
+        <!--end of navbar-->
 
-        <div class="container">
-            {% block content %}
-            {% endblock %}
-        </div>
+        <section class="section">
+            <div class="container">
+                {% block content %}
+                {% endblock %}
+            </div>
+        </section>
+
+        <footer class="footer">
+            <div class="content has-text-centered">
+                <p>
+                    <strong>myPanda Blog</strong> by <a href="https://github.com/SeyiAyo">Panda</a>. The source code is licensed
+                    <a href="http://opensource.org/licenses/mit-license.php">MIT</a>.
+                </p>
+            </div>
+
     </body>
 </html>
