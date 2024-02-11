@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import Post, Category, Comment
+from .forms import PostForm
 
 
 
@@ -7,12 +8,17 @@ class CommentItemInline(admin.TabularInline):
     model = Comment
     raw_id_fields = ['post']
 
+
+
 class PostAdmin(admin.ModelAdmin):
     search_fields = ['title', 'intro', 'content']
     list_display = ['title', 'slug', 'category', 'created_at', 'updated_at', 'status']
     list_filter = ['category', 'created_at', 'status']
     inlines = [CommentItemInline]
     prepopulated_fields = {'slug': ('title',)}
+    form = PostForm
+    
+    
     
     
 class CategoryAdmin(admin.ModelAdmin):

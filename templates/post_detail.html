@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% block title %}Post Detail{% endblock %}
 {% block content %}
+{% load markdown_deux_tags %}
 <section class="hero">
     <div class="hero-body">
         <div class="container">
@@ -16,7 +17,7 @@
                                     <img src="{{ post.image.url }}" alt="{{ post.title }}">
                                 </figure>
                             {% endif %}
-                            <p>{{ post.content }}</p>
+                            <p>{{ post.content | markdown }}</p>
 
                             <p><small>Category: <a href="{% url 'category_detail' post.category.slug %}">{{ post.category.title }}</a></small></p>
 

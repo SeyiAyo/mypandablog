@@ -33,3 +33,5 @@ urlpatterns = [
     path('<slug:slug>/', post_detail, name='post_detail'),
     path('category/<slug:slug>/', category_detail, name='category_detail'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
