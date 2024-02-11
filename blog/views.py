@@ -1,4 +1,5 @@
 from django.db.models import Q
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from .models import Post, Category
 from .forms import CommentForm
@@ -59,3 +60,12 @@ def search(request):
     posts = Post.objects.filter(status=Post.ACTIVE).filter(Q(title__icontains=query) | Q(content__icontains=query) | Q(intro__icontains=query))
     
     return render(request, 'search.html', {'query': query, 'posts': posts})
+
+
+def robots_txt(request):
+    text = [
+        "User-Agent: *",
+        "Disallow: /admin/",
+    ]
+
+    return HttpResponse("\n".join(text), content_type="text/plain")

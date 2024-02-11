@@ -18,9 +18,14 @@ from django.contrib import admin
 from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
-from blog.views import frontpage, about, post_detail, category_detail, search
+from blog.views import frontpage, about, post_detail, category_detail, search, robots_txt
+from django.contrib.sitemaps.views import sitemap
+
+from blog.sitemaps import PostSitemap, CategorySitemap
 
 urlpatterns = [
+    path('sitemap.xml', sitemap, {'sitemaps': {'posts': PostSitemap, 'categories': CategorySitemap}}, name='django.contrib.sitemaps.views.sitemap'),
+    path('robots.txt', robots_txt, name='robots_txt'),
     path('admin/', admin.site.urls),
     path('', frontpage, name='frontpage'),
     path('about/', about, name='about'),
