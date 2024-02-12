@@ -9,9 +9,7 @@ class CommentForm(ModelForm):
     class Meta:
         model = Comment
         fields = ['name', 'email', 'contents']
-        widgets = {
-            'contents': MarkdownEditorWidget(),
-        }
+        
         
         
 class PostForm(ModelForm):
