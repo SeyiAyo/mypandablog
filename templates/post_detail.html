@@ -25,14 +25,16 @@
 
                             <h2 class="subtitle is-4">Comments</h2>
 
-                            <form action="" method="post" class="mb-6">
+                            <form action="{% url 'post_detail' post.slug %}" method="post" class="mb-6" >
                                 {% csrf_token %}
 
+                                {{ form.errors }}
+                                
                                 {{ form.as_p }}
 
                                 <div class="field">
                                     <div class="control">
-                                        <button class="button is-success" type="submit">Submit</button>
+                                        <button class="button is-success" type="button" onclick="this.form.submit()">Submit</button>
                                     </div>
                                 </div>
                             </form>
@@ -45,7 +47,7 @@
                                 <article class="media box">
                                     <div class="media-content">
                                         <strong>{{ comment.name }}</strong> <small>{{ comment.created_at | timesince }} ago</small><br>
-                                        {{ comment.content }}
+                                        {{ comment.contents | markdown }}
                                     </div>
                                 </article>
                             {% endfor %}
