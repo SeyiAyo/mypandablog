@@ -10,6 +10,11 @@
                 <section class="section">
                     <div class="columns">
                         <div class="column is-8 is-offset-2">
+                            {% if post.image %}
+                                        <figure class="image is-16by9">
+                                            <img src="{{ post.image.url }}" alt="">
+                                        </figure>
+                                {% endif %}
                             <div class="content is-medium">
                                 <h2 class="subtitle is-4">{{ post.created_at | date:"M d, Y" }}</h2>
                                 <a href="{% url 'post_detail' post.slug %}"><h1 class="title">{{ post.title }}</h1></a>
@@ -18,14 +23,7 @@
                                         <span class="tag is-info is-uppercase ">{{ post.category.title }}</span>
                                     </a>
                                 </div>
-                                {% if post.image %}
-                                <div class="columns">
-                                    <div class="column is-8 is-offset-2">
-                                        <figure class="image is-16by9">
-                                            <img src="{{ post.image.url }}" alt="">
-                                        </figure>
-                                    </div>
-                                {% endif %}
+
                                 <p>{{ post.content | markdown }}</p>
                             </div>
                         </div>
@@ -70,8 +68,12 @@
 
                             {{ form.errors }}
 
-                            {{ form.as_p }}
-
+                            {% for field in form %}
+                                <div class="field">
+                                    <label class="label">{{ field.label }}</label>
+                                    {{ field }}
+                                </div>
+                            {% endfor %}
                             <div class="field">
                                 <div class="control">
                                     <button class="button is-success" type="button" onclick="this.form.submit()">Submit</button>
@@ -79,9 +81,10 @@
                             </div>
                         
                         </form>
-                    </div>
-                </div>
-            
+
+                        <hr>
+
+                        <div class="container">
                             {% if not post.comments.all %}
                                 <p>No comments yet</p>
                             {% endif %}
@@ -94,6 +97,10 @@
                                     </div>
                                 </article>
                             {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </section>

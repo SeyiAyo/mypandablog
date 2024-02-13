@@ -35,8 +35,8 @@
         <nav class="navbar" style="background-color: gray;">
             <div class="container">
             <div class="navbar-brand">
-                <a class="navbar-item" href="../">
-                <img src="{% static '/images/bulma.png' %}" alt="Logo">
+                <a class="navbar-item" href="{% url 'frontpage' %}">
+                <strong class="title">myPanda Blog</strong>
                 </a>
                 <span class="navbar-burger burger" data-target="navbarMenu">
                 <span></span>
@@ -51,7 +51,7 @@
                     <div class="control has-icons-left">
                         <input class="input is-rounded" name="query" type="text" placeholder="Search">
                         <span class="icon is-left">
-                            <i class="fas fa-search"></i>
+                            <i src="{% static 'images/search.png' %}" class="fa fa-search"></i>
                         </span>
                     </div>
                     </form>
@@ -62,7 +62,7 @@
                 <a href="{% url 'about' %}" class="navbar-item is-size-5 has-text-weight-semibold">
                     About
                 </a>
-                <a href="" class="navbar-item is-size-5 has-text-weight-semibold">
+                <a href="{% url 'contact' %}" class="navbar-item is-size-5 has-text-weight-semibold">
                     Contact Us
                 </a>
                 </div>

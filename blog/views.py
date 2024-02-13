@@ -17,6 +17,9 @@ def frontpage(request):
 def about(request):
     return render(request, 'about.html')
 
+def contact(request):
+    return render(request, 'contact.html')
+
 
 def post_detail(request, slug):
     post = Post.objects.get(slug=slug, status=Post.ACTIVE)
