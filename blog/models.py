@@ -26,6 +26,7 @@ class Post(models.Model):
     title = models.CharField(max_length=255)
     slug = models.SlugField()
     category = models.ForeignKey(Category, related_name="posts", on_delete=models.CASCADE)
+    author = models.CharField(max_length=255, default="Sensei Panda")
     
     intro = models.TextField()
     content = models.TextField()

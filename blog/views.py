@@ -6,16 +6,26 @@ from .forms import CommentForm
 
 def frontpage(request):
     posts = Post.objects.filter(status=Post.ACTIVE)
+    categories = Category.objects.all() 
     
     context = {
-        'posts': posts
+        'posts': posts,
+        'categories': categories
     }
     
     return render(request, 'frontpage.html', context)
 
 
 def about(request):
-    return render(request, 'about.html')
+    posts = Post.objects.filter(status=Post.ACTIVE)
+    categories = Category.objects.all()
+    
+    context = {
+        'posts': posts,
+        'categories': categories
+    }
+    
+    return render(request, 'about.html', context)
 
 def contact(request):
     return render(request, 'contact.html')
@@ -23,6 +33,7 @@ def contact(request):
 
 def post_detail(request, slug):
     post = Post.objects.get(slug=slug, status=Post.ACTIVE)
+    categories = Category.objects.all()
     
     if request.method == 'POST':
         form = CommentForm(request.POST)
@@ -38,7 +49,8 @@ def post_detail(request, slug):
     
     context = {
         'post': post,
-        'form': form
+        'form': form,
+        'categories': categories
     }
     
     return render(request, 'post_detail.html', context)
@@ -48,21 +60,24 @@ def post_detail(request, slug):
 def category_detail(request, slug):
     category = Category.objects.get(slug=slug)
     posts = category.posts.filter(status=Post.ACTIVE)
+    categories = Category.objects.all()
     
     context = {
         'category': category,
-        'posts': posts
+        'posts': posts,
+        'categories': categories
     }
     
-    return render(request, 'category_detail.html', {'category': category, 'posts': posts})
+    return render(request, 'category_detail.html', context)
 
 
 def search(request):
     query = request.GET.get('query', '')
     
     posts = Post.objects.filter(status=Post.ACTIVE).filter(Q(title__icontains=query) | Q(content__icontains=query) | Q(intro__icontains=query))
+    categories = Category.objects.all()
     
-    return render(request, 'search.html', {'query': query, 'posts': posts})
+    return render(request, 'search.html', {'query': query, 'posts': posts, 'categories': categories})
 
 
 def robots_txt(request):
