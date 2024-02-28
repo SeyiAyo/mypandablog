@@ -1,6 +1,7 @@
 from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .models import Post, Category
 from .forms import CommentForm
 
@@ -8,8 +9,17 @@ def frontpage(request):
     posts = Post.objects.filter(status=Post.ACTIVE)
     categories = Category.objects.all() 
     
+    paginator = Paginator(posts, 5)
+    page = request.GET.get('page')
+    try:
+        post = paginator.page(page)
+    except PageNotAnInteger:
+        post = paginator.page(1)
+    except EmptyPage:
+        post = paginator.page(paginator.num_pages)
+        
     context = {
-        'posts': posts,
+        'posts': post,
         'categories': categories
     }
     
@@ -62,9 +72,18 @@ def category_detail(request, slug):
     posts = category.posts.filter(status=Post.ACTIVE)
     categories = Category.objects.all()
     
+    paginator = Paginator(posts, 5)
+    page = request.GET.get('page')
+    try:
+        post = paginator.page(page)
+    except PageNotAnInteger:
+        post = paginator.page(1)
+    except EmptyPage:
+        post = paginator.page(paginator.num_pages)
+    
     context = {
         'category': category,
-        'posts': posts,
+        'posts': post,
         'categories': categories
     }
     
