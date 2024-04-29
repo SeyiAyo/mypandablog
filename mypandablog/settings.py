@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     
     #3rd Party
     'blog',
+    'ckeditor',
     'markdown',
     'markdown_deux'
 ]
