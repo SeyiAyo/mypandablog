@@ -33,18 +33,25 @@
     <!-- Recommended Posts -->
     <div class="bg-white flex flex-col justify-start p-6">
         <h2 class="text-lg font-bold mb-4">Recommended Posts</h2>
-        <ul>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             {% for recommendation in recommendations %}
-                <li>
-                    <a href="{% url 'post_detail' recommendation.slug %}" class="text-blue-700 hover:text-gray-700">{{ recommendation.title }}</a>
-                </li>
+                <div class="flex flex-col shadow-lg">
+                    {% if recommendation.image %}
+                    <a href="{% url 'post_detail' recommendation.slug %}" class="hover:opacity-75">
+                        <img src="{{ recommendation.image.url }}" alt="" class="w-full h-48 object-cover">
+                    </a>
+                    {% endif %}
+                    <div class="bg-white flex flex-col justify-start p-4">
+                        <a href="{% url 'post_detail' recommendation.slug %}" class="text-lg font-bold hover:text-gray-700">{{ recommendation.title }}</a>
+                    </div>
+                </div>
             {% endfor %}
-        </ul>
+        </div>
     </div>
 
     <!-- Comments Section -->
-    <div class="container mx-auto">
-        <div class="bg-gray-100 p-6">
+    <div class="container mx-auto mt-8">
+        <div class="bg-gray-100 p-6 rounded-lg shadow-md">
             <h2 class="text-lg font-bold mb-4">Add a comment</h2>
             <form class="bg-white p-4 rounded-lg shadow-md mb-6" action="{% url 'post_detail' post.slug %}" method="post">
                 {% csrf_token %}
@@ -57,7 +64,7 @@
                     </div>
                 {% endfor %}
                 <button
-                    class="bg-cyan-500 hover:bg-cyan-700 text-gray font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    class="bg-cyan-500 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                     type="submit">
                     Submit
                 </button>
