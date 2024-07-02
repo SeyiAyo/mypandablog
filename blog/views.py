@@ -4,6 +4,11 @@ from django.shortcuts import render, redirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .models import Post, Category
 from .forms import CommentForm
+from django.shortcuts import render, get_object_or_404
+from .models import Post
+from .utils import get_sentiment, recommend_posts
+import pandas as pd
+
 
 def frontpage(request):
     posts = Post.objects.filter(status=Post.ACTIVE)
@@ -42,27 +47,44 @@ def contact(request):
 
 
 def post_detail(request, slug):
-    post = Post.objects.get(slug=slug, status=Post.ACTIVE)
-    categories = Category.objects.all()
-    
+    post = get_object_or_404(Post, slug=slug)
+    form = CommentForm()
+
     if request.method == 'POST':
         form = CommentForm(request.POST)
-        
         if form.is_valid():
-            obj = form.save(commit=False)
-            obj.post = post
-            obj.save()
-            
-            return redirect('post_detail', slug=post.slug)
-    else:        
-        form = CommentForm()
-    
+            comment = form.save(commit=False)
+            comment.post = post
+            comment.save()
+
+    sentiment = get_sentiment(post.content)
+
+    # Create a dataframe of all posts
+    posts = Post.objects.all()
+    posts_data = [{
+        'id': p.id,
+        'title': p.title,
+        'slug': p.slug,
+        'content': p.content,
+        'created_at': p.created_at,
+        'category': p.category.title if p.category else '',
+        'author': p.author,
+        'image_url': p.image.url if p.image else ''
+    } for p in posts]
+    posts_df = pd.DataFrame(posts_data)
+
+    # Get recommendations for the post
+    recommendations = recommend_posts(post.id, posts_df)
+
+    # Convert recommended post titles to Post objects
+    recommended_posts = Post.objects.filter(title__in=recommendations)
+
     context = {
         'post': post,
         'form': form,
-        'categories': categories
+        'sentiment': sentiment,
+        'recommendations': recommended_posts
     }
-    
     return render(request, 'post_detail.html', context)
 
 

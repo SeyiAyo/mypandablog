@@ -37,6 +37,7 @@ class Post(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=10, choices=CHOICES_STATUS, default=ACTIVE)
     image = models.ImageField(upload_to="uploads/", null=True, blank=True)
+    sentiment = models.FloatField(null=True, blank=True)
     
     class Meta:
         ordering = ["-created_at",]
@@ -46,6 +47,17 @@ class Post(models.Model):
     
     def get_absolute_url(self):
         return '/%s/%s/' % (self.category.slug, self.slug)
+    
+    
+class Recommendation(models.Model):
+    post = models.ForeignKey(Post, related_name='recommended_from', on_delete=models.CASCADE)
+    recommended_post = models.ForeignKey(Post, related_name='recommended_to', on_delete=models.CASCADE)
+    
+    class Meta:
+        unique_together = ('post', 'recommended_post')
+
+    def __str__(self):
+        return f"{self.post.title} -> {self.recommended_post.title}"
     
     
 class Comment(models.Model):

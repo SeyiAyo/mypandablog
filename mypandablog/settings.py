@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'blog',
     'ckeditor',
     'markdown',
-    'markdown_deux'
+    'markdown_deux',
 ]
 
 MIDDLEWARE = [

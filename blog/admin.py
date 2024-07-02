@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Post, Category, Comment
+from .models import Post, Category, Comment, Recommendation
 from .forms import PostForm
 
 
@@ -18,7 +18,8 @@ class PostAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('title',)}
     form = PostForm
     
-    
+class RecommendationAdmin(admin.ModelAdmin):
+    list_display = ['post', 'recommended_post']    
     
     
 class CategoryAdmin(admin.ModelAdmin):
@@ -34,3 +35,4 @@ admin.site.register(Post, PostAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.site_header = 'MyPandaBlog Administration'
 admin.site.register(Comment, CommentAdmin)
+admin.site.register(Recommendation, RecommendationAdmin)
