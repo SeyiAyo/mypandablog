@@ -85,7 +85,7 @@ WSGI_APPLICATION = 'mypandablog.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'mysql-helm-moral-tangerine',
+        'NAME': 'pandablog',
         'USER': 'pandablog',
         'PASSWORD': 'Seyisensei18',
         'HOST': 'mysql-cheap-honeydew.default.svc.cluster.local',
