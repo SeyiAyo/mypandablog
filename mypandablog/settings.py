@@ -88,7 +88,7 @@ DATABASES = {
         'NAME': 'pandablog',
         'USER': 'pandablog',
         'PASSWORD': 'Seyisensei18',
-        'HOST': 'mysql-cheap-honeydew.default.svc.cluster.local',
+        'HOST': 'mysql-rds-those-apple-ymye.cncaucce84sm.us-west-2.rds.amazonaws.com',
         'PORT': '3306',
     }
 }
