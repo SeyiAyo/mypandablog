@@ -25,8 +25,11 @@ SECRET_KEY = 'django-insecure-dutyiwb0-kx^dli$a1iw$bql%s0t1*@swpyw^zu8+f6)1uaicn
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['*']
-CSRF_TRUSTED_ORIGINS = ['*']
+ALLOWED_HOSTS = ['https://mypandablog-brxj.zeet-panda-team.zeet.app/']
+CSRF_TRUSTED_ORIGINS = ['https://mypandablog-brxj.zeet-panda-team.zeet.app/']
+CSRF_ALLOWED_ORIGINS = ['https://mypandablog-brxj.zeet-panda-team.zeet.app/']
+CORS_ORIGINS_WHITELIST = ['https://mypandablog-brxj.zeet-panda-team.zeet.app/']
+CORS_ALLOWED_ORIGINS = ['https://mypandablog-brxj.zeet-panda-team.zeet.app/']
 
 # SECURE_SSL_REDIRECT = True
 
