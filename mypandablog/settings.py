@@ -23,13 +23,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-dutyiwb0-kx^dli$a1iw$bql%s0t1*@swpyw^zu8+f6)1uaicn'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
-CSRF_TRUSTED_ORIGINS = ['https://mypandablog-brxj.zeet-panda-team.zeet.app', 'https://mypandablog-brxj.zeet-panda-team.zeet.app/admin/login/?next=/admin']
-CSRF_ALLOWED_ORIGINS = ['https://mypandablog-brxj.zeet-panda-team.zeet.app', 'https://mypandablog-brxj.zeet-panda-team.zeet.app/admin/login/?next=/admin']
-CORS_ORIGINS_WHITELIST = ['https://mypandablog-brxj.zeet-panda-team.zeet.app', 'https://mypandablog-brxj.zeet-panda-team.zeet.app/admin/login/?next=/admin']
-CORS_ALLOWED_ORIGINS = ['https://mypandablog-brxj.zeet-panda-team.zeet.app', 'https://mypandablog-brxj.zeet-panda-team.zeet.app/admin/login/?next=/admin']
+CSRF_TRUSTED_ORIGINS = ['https://mypandablog-brxj.zeet-panda-team.zeet.app', 'https://mailstation.tech']
+CSRF_ALLOWED_ORIGINS = ['https://mypandablog-brxj.zeet-panda-team.zeet.app', 'https://mailstation.tech']
+CORS_ORIGINS_WHITELIST = ['https://mypandablog-brxj.zeet-panda-team.zeet.app', 'https://mailstation.tech']
+CORS_ALLOWED_ORIGINS = ['https://mypandablog-brxj.zeet-panda-team.zeet.app', 'https://mailstation.tech']
 
 # SECURE_SSL_REDIRECT = True
 
