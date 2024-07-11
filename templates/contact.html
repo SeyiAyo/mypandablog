@@ -5,11 +5,12 @@
 <section class="hero is-fullheight">
     <div class="hero-body">
         <div class="container has-text-centered">
-            <div class="columns is-8 is-variable ">
+            <div class="columns is-8 is-variable">
                 <div class="column is-two-thirds has-text-left">
                     <h1 class="title is-1">Contact Us</h1>
-                    <p class="is-size-4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Nulla eligendi soluta
-                        voluptate facere molestiae consequatur.</p>
+                    <p class="is-size-4">
+                        We value your feedback and inquiries. Whether you have a question, suggestion, or just want to say hello, feel free to reach out to us. Our team is here to assist you and provide the information you need.
+                    </p>
                     <div class="social-media">
                         <a href="https://facebook.com" target="_blank" class="button is-light is-large"><i class="fa fa-facebook-square" aria-hidden="true"></i></a>
                         <a href="https://www.instagram.com/seyiayodev/" target="_blank" class="button is-light is-large"><i class="fa fa-instagram" aria-hidden="true"></i></a>
@@ -17,30 +18,34 @@
                     </div>
                 </div>
                 <div class="column is-one-third has-text-left">
-                    <div class="field">
-                        <label class="label">Name</label>
-                        <div class="control">
-                            <input class="input is-medium" type="text">
+                    <form action="{% url 'contact' %}" method="post">
+                        {% csrf_token %}
+                        <div class="field">
+                            <label class="label">Name</label>
+                            <div class="control">
+                                <input class="input is-medium" type="text" name="name" required>
+                            </div>
                         </div>
-                    </div>
-                    <div class="field">
-                        <label class="label">Email</label>
-                        <div class="control">
-                            <input class="input is-medium" type="text">
+                        <div class="field">
+                            <label class="label">Email</label>
+                            <div class="control">
+                                <input class="input is-medium" type="email" name="email" required>
+                            </div>
                         </div>
-                    </div>
-                    <div class="field">
-                        <label class="label">Message</label>
-                        <div class="control">
-                            <textarea class="textarea is-medium"></textarea>
+                        <div class="field">
+                            <label class="label">Message</label>
+                            <div class="control">
+                                <textarea class="textarea is-medium" name="message" required></textarea>
+                            </div>
                         </div>
-                    </div>
-                    <div class="control">
-                        <button type="submit" class="button is-link is-fullwidth has-text-weight-medium is-medium">Send Message</button>
-                    </div>
+                        <div class="control">
+                            <button type="submit" class="button is-link is-fullwidth has-text-weight-medium is-medium">Send Message</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 </section>
+
 {% endblock %}

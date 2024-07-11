@@ -43,10 +43,28 @@ def about(request):
     return render(request, 'about.html', context)
 
 def contact(request):
-    return render(request, 'contact.html')
+    categories = Category.objects.all()
+    
+    context = {
+        'categories': categories
+    }
+    return render(request, 'contact.html', context)
 
 def privacy_policy(request):
-    return render(request, 'privacy_policy.html')
+    categories = Category.objects.all()
+    
+    context = {
+        'categories': categories
+    }
+    return render(request, 'privacy_policy.html', context)
+
+def terms_conditions(request):
+    categories = Category.objects.all()
+    
+    context = {
+        'categories': categories
+    }
+    return render(request, 'terms.html', context)
 
 def post_detail(request, slug):
     post = get_object_or_404(Post, slug=slug)
