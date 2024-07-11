@@ -45,9 +45,13 @@ def about(request):
 def contact(request):
     return render(request, 'contact.html')
 
+def privacy_policy(request):
+    return render(request, 'privacy_policy.html')
 
 def post_detail(request, slug):
     post = get_object_or_404(Post, slug=slug)
+    categories = Category.objects.all()
+    
     form = CommentForm()
 
     if request.method == 'POST':
@@ -81,6 +85,7 @@ def post_detail(request, slug):
 
     context = {
         'post': post,
+        'categories': categories,
         'form': form,
         'sentiment': sentiment,
         'recommendations': recommended_posts

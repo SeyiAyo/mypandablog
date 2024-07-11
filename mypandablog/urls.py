@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
-from blog.views import frontpage, about, post_detail, category_detail, search, robots_txt, contact
+from blog.views import frontpage, about, post_detail, category_detail, search, robots_txt, contact, privacy_policy
 from django.contrib.sitemaps.views import sitemap
 
 from blog.sitemaps import PostSitemap, CategorySitemap
@@ -31,6 +31,7 @@ urlpatterns = [
     path('about/', about, name='about'),
     path("search/", search, name="search"),
     path('contact/', contact, name='contact'),
+    path("privacy_policy/", privacy_policy, name="privacy_policy"),
     path('<slug:slug>/', post_detail, name='post_detail'),
     path('category/<slug:slug>/', category_detail, name='category_detail'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

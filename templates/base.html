@@ -165,7 +165,7 @@
                 </a>
             </div>
 
-            <div class="w-full bg-white shadow flex flex-col my-4 p-6">
+            <!-- <div class="w-full bg-white shadow flex flex-col my-4 p-6">
                 <p class="text-xl font-semibold pb-5">Instagram</p>
                 <div class="grid grid-cols-3 gap-3">
                     <img class="hover:opacity-75" src="https://source.unsplash.com/collection/1346951/150x150?sig=1">
@@ -181,7 +181,7 @@
                 <a href="https://www.instagram.com/seyiayodev/" class="w-full bg-blue-800 text-white font-bold text-sm uppercase rounded hover:bg-blue-700 flex items-center justify-center px-2 py-3 mt-6">
                     <i class="fab fa-instagram mr-2"></i> Follow @SeyiAyoDev
                 </a>
-            </div>
+            </div> -->
 
         </aside>
 
@@ -271,5 +271,43 @@
 
         });
     </script>
+
+
+    <!--Cookie banner-->
+    <div id="cookie-banner" style="display: none; position: fixed; bottom: 0; width: 100%; background: #000; color: #fff; padding: 10px; text-align: center;">
+        <p>We use cookies to enhance your experience. By continuing to visit this site you agree to our use of cookies.</p>
+        <button id="accept-cookies" style="background: #fff; color: #000; padding: 5px 10px; border: none; cursor: pointer;">Accept</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!localStorage.getItem('cookiesAccepted')) {
+                document.getElementById('cookie-banner').style.display = 'block';
+            }
+            document.getElementById('accept-cookies').onclick = function() {
+                localStorage.setItem('cookiesAccepted', 'true');
+                document.getElementById('cookie-banner').style.display = 'none';
+            };
+        });
+    </script>
+
+    <script>
+        function setCookie(name, value, days) {
+            if (!localStorage.getItem('cookiesAccepted')) {
+                return;
+            }
+            let expires = "";
+            if (days) {
+                let date = new Date();
+                date.setTime(date.getTime() + (days*24*60*60*1000));
+                expires = "; expires=" + date.toUTCString();
+            }
+            document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+        }
+
+        // Example usage:
+        setCookie('example_cookie', 'example_value', 7);
+    </script>   
+
 </body>
 </html>
