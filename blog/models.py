@@ -4,29 +4,9 @@ from django.utils.text import slugify
 from django.utils.html import strip_tags
 from ckeditor.fields import RichTextField
 from taggit.managers import TaggableManager
-import math
-import readtime
-
-class UserProfile(models.Model):
-    """
-    Extended user profile for blog authors and readers.
-    """
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    bio = models.TextField(max_length=500, blank=True)
-    avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
-    website = models.URLField(max_length=200, blank=True)
-    twitter = models.CharField(max_length=50, blank=True)
-    github = models.CharField(max_length=50, blank=True)
-    linkedin = models.CharField(max_length=50, blank=True)
-    email_notifications = models.BooleanField(default=True)
-    
-    def __str__(self):
-        return self.user.username
 
 class Category(models.Model):
-    """
-    Category model for organizing blog posts.
-    """
+    """Category model for organizing blog posts."""
     title = models.CharField(max_length=255, db_index=True)
     slug = models.SlugField(db_index=True, unique=True)
     description = models.TextField(blank=True)
@@ -48,9 +28,7 @@ class Category(models.Model):
         super().save(*args, **kwargs)
 
 class Post(models.Model):
-    """
-    Enhanced blog post model with modern features.
-    """
+    """Blog post model with modern features."""
     ACTIVE = 'active'
     DRAFT = 'draft'
     SCHEDULED = 'scheduled'
@@ -64,7 +42,7 @@ class Post(models.Model):
     title = models.CharField(max_length=255, db_index=True)
     slug = models.SlugField(db_index=True, unique=True)
     category = models.ForeignKey(Category, related_name="posts", on_delete=models.CASCADE)
-    author = models.ForeignKey(User, related_name="posts", on_delete=models.CASCADE)
+    author = models.CharField(max_length=255)
     
     intro = RichTextField(blank=True, null=True)
     content = RichTextField(blank=True, null=True)
@@ -86,7 +64,6 @@ class Post(models.Model):
     views_count = models.PositiveIntegerField(default=0)
     likes = models.ManyToManyField(User, related_name="liked_posts", blank=True)
     bookmarks = models.ManyToManyField(User, related_name="bookmarked_posts", blank=True)
-    sentiment = models.FloatField(null=True, blank=True)
     featured = models.BooleanField(default=False)
     
     # Tags using django-taggit
@@ -97,7 +74,6 @@ class Post(models.Model):
         indexes = [
             models.Index(fields=['created_at', 'status']),
             models.Index(fields=['category', 'status']),
-            models.Index(fields=['author', 'status']),
             models.Index(fields=['status', 'published_at']),
         ]
     
@@ -118,9 +94,11 @@ class Post(models.Model):
     
     @property
     def reading_time(self):
-        """Calculate reading time in minutes."""
+        """Calculate reading time in minutes based on content length."""
         text = strip_tags(self.content)
-        return readtime.of_text(text).minutes
+        words = len(text.split())
+        minutes = round(words / 200)  # Average reading speed of 200 words per minute
+        return max(1, minutes)  # Minimum 1 minute reading time
     
     @property
     def likes_count(self):
@@ -131,9 +109,7 @@ class Post(models.Model):
         return self.comments.count()
 
 class Comment(models.Model):
-    """
-    Enhanced comment model with threading and reactions.
-    """
+    """Enhanced comment model with threading and reactions."""
     post = models.ForeignKey(Post, related_name="comments", on_delete=models.CASCADE)
     user = models.ForeignKey(User, related_name="comments", null=True, blank=True, on_delete=models.SET_NULL)
     parent = models.ForeignKey('self', null=True, blank=True, related_name='replies', on_delete=models.CASCADE)
@@ -160,10 +136,32 @@ class Comment(models.Model):
     def likes_count(self):
         return self.likes.count()
 
+class UserProfile(models.Model):
+    """Extended user profile for blog authors and readers."""
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    bio = models.TextField(max_length=500, blank=True)
+    avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
+    website = models.URLField(max_length=200, blank=True)
+    twitter = models.CharField(max_length=50, blank=True)
+    github = models.CharField(max_length=50, blank=True)
+    linkedin = models.CharField(max_length=50, blank=True)
+    email_notifications = models.BooleanField(default=True)
+    
+    def __str__(self):
+        return self.user.username
+
+class Newsletter(models.Model):
+    """Newsletter subscription model."""
+    email = models.EmailField(unique=True)
+    name = models.CharField(max_length=255, blank=True)
+    subscribed_at = models.DateTimeField(auto_now_add=True)
+    is_active = models.BooleanField(default=True)
+    
+    def __str__(self):
+        return self.email
+
 class PostView(models.Model):
-    """
-    Track post views with session/user info.
-    """
+    """Track post views with session/user info."""
     post = models.ForeignKey(Post, related_name='post_views', on_delete=models.CASCADE)
     user = models.ForeignKey(User, related_name='post_views', null=True, blank=True, on_delete=models.SET_NULL)
     ip_address = models.GenericIPAddressField(null=True, blank=True)
@@ -175,37 +173,4 @@ class PostView(models.Model):
         indexes = [
             models.Index(fields=['post', 'created_at']),
             models.Index(fields=['user', 'created_at']),
-        ]
-
-class Newsletter(models.Model):
-    """
-    Newsletter subscription model.
-    """
-    email = models.EmailField(unique=True)
-    name = models.CharField(max_length=255, blank=True)
-    subscribed_at = models.DateTimeField(auto_now_add=True)
-    is_active = models.BooleanField(default=True)
-    
-    def __str__(self):
-        return self.email
-
-class SocialShare(models.Model):
-    """
-    Track social media shares.
-    """
-    PLATFORMS = (
-        ('twitter', 'Twitter'),
-        ('facebook', 'Facebook'),
-        ('linkedin', 'LinkedIn'),
-        ('reddit', 'Reddit'),
-    )
-    
-    post = models.ForeignKey(Post, related_name='shares', on_delete=models.CASCADE)
-    platform = models.CharField(max_length=20, choices=PLATFORMS)
-    shared_at = models.DateTimeField(auto_now_add=True)
-    
-    class Meta:
-        ordering = ['-shared_at']
-        indexes = [
-            models.Index(fields=['post', 'platform']),
         ]

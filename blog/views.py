@@ -7,7 +7,6 @@ from .forms import CommentForm
 from django.shortcuts import render, get_object_or_404
 from .models import Post
 from .utils import get_sentiment, recommend_posts
-import pandas as pd
 from django.core.cache import cache
 from django.views.decorators.cache import cache_page
 from django.db.models import Prefetch
@@ -119,26 +118,9 @@ def post_detail(request, slug):
             comment.save()
 
     sentiment = get_sentiment(post.content)
-
-    # Create a dataframe of all posts
-    posts = Post.objects.all()
-    posts_data = [{
-        'id': p.id,
-        'title': p.title,
-        'slug': p.slug,
-        'content': p.content,
-        'created_at': p.created_at,
-        'category': p.category.title if p.category else '',
-        'author': p.author,
-        'image_url': p.image.url if p.image else ''
-    } for p in posts]
-    posts_df = pd.DataFrame(posts_data)
-
-    # Get recommendations for the post
-    recommendations = recommend_posts(post.id, posts_df)
-
-    # Convert recommended post titles to Post objects
-    recommended_posts = Post.objects.filter(title__in=recommendations)
+    
+    # Get recommendations using the updated recommend_posts function
+    recommended_posts = recommend_posts(post)
 
     context = {
         'post': post,

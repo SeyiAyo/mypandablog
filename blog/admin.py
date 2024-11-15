@@ -1,38 +1,44 @@
 from django.contrib import admin
-from .models import Post, Category, Comment, Recommendation
-from .forms import PostForm
+from .models import Post, Category, Comment, UserProfile, Newsletter, PostView
 
-
-
-class CommentItemInline(admin.TabularInline):
-    model = Comment
-    raw_id_fields = ['post']
-
-
-
+@admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
+    list_display = ['title', 'category', 'author', 'created_at', 'status']
+    list_filter = ['status', 'category', 'created_at']
     search_fields = ['title', 'intro', 'content']
-    list_display = ['title', 'slug', 'category', 'created_at', 'updated_at', 'status']
-    list_filter = ['category', 'created_at', 'status']
-    inlines = [CommentItemInline]
     prepopulated_fields = {'slug': ('title',)}
-    form = PostForm
-    
-class RecommendationAdmin(admin.ModelAdmin):
-    list_display = ['post', 'recommended_post']    
-    
-    
-class CategoryAdmin(admin.ModelAdmin):
-    search_fields = ['title']
-    list_display = ['title']
-    prepopulated_fields = {'slug': ('title',)}
-    
-    
-class CommentAdmin(admin.ModelAdmin):
-    list_display = ['post', 'name', 'created_at']
+    date_hierarchy = 'created_at'
+    ordering = ['-created_at']
 
-admin.site.register(Post, PostAdmin)
-admin.site.register(Category, CategoryAdmin)
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ['title', 'description']
+    prepopulated_fields = {'slug': ('title',)}
+    search_fields = ['title', 'description']
+
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ['post', 'name', 'email', 'created_at', 'is_approved']
+    list_filter = ['created_at', 'is_approved']
+    search_fields = ['name', 'email', 'contents']
+    date_hierarchy = 'created_at'
+
+@admin.register(UserProfile)
+class UserProfileAdmin(admin.ModelAdmin):
+    list_display = ['user', 'website', 'twitter', 'github']
+    search_fields = ['user__username', 'user__email', 'bio']
+
+@admin.register(Newsletter)
+class NewsletterAdmin(admin.ModelAdmin):
+    list_display = ['email', 'name', 'subscribed_at', 'is_active']
+    list_filter = ['is_active', 'subscribed_at']
+    search_fields = ['email', 'name']
+
+@admin.register(PostView)
+class PostViewAdmin(admin.ModelAdmin):
+    list_display = ['post', 'user', 'ip_address', 'created_at']
+    list_filter = ['created_at']
+    date_hierarchy = 'created_at'
+    search_fields = ['post__title', 'user__username', 'ip_address']
+
 admin.site.site_header = 'MyPandaBlog Administration'
-admin.site.register(Comment, CommentAdmin)
-admin.site.register(Recommendation, RecommendationAdmin)

@@ -33,3 +33,18 @@ Not Found: /media/uploads/anime_flowers.jpeg
 "GET /media/uploads/anime_flowers.jpeg HTTP/1.1" 404 179
 C:\Users\USER\Documents\Dev Projects\mypandablog\blog\models.py changed, reloading.
 Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 20487
+Not Found: /static/images/favicon.png
+"GET /static/images/favicon.png HTTP/1.1" 404 179
+Not Found: /media/uploads/anime_flowers.jpeg
+"GET /media/uploads/anime_flowers.jpeg HTTP/1.1" 404 179
+"GET /terms_conditions/ HTTP/1.1" 200 17061
+Not Found: /static/images/favicon.png
+"GET /static/images/favicon.png HTTP/1.1" 404 179
+Not Found: /static/images/favicon.png
+"GET /static/images/favicon.png HTTP/1.1" 404 179
+Not Found: /static/images/favicon.png
+"GET /static/images/favicon.png HTTP/1.1" 404 179
+Not Found: /media/uploads/anime_flowers.jpeg
+"GET /media/uploads/anime_flowers.jpeg HTTP/1.1" 404 179
