@@ -2,87 +2,165 @@
 
 {% block title %}{{ post.title }}{% endblock %}
 
+{% block meta_description %}{{ post.intro|truncatewords:30 }}{% endblock %}
+
 {% block content %}
 {% load markdown_deux_tags %}
-<!-- Posts Section -->
+<!-- Post Content Section -->
 <section class="w-full md:w-2/3 flex flex-col items-center px-3">
-    <article class="flex flex-col shadow my-4">
+    <article class="flex flex-col shadow-lg rounded-lg overflow-hidden my-4 w-full">
         <!-- Article Image -->
         {% if post.image %}
-        <a href="#" class="hover:opacity-75">
-            <img src="{{ post.image.url }}" alt="">
-        </a>
+        <div class="relative w-full h-96">
+            <img src="{{ post.image.url }}" 
+                 alt="{{ post.title }}"
+                 class="w-full h-full object-cover"
+                 loading="lazy">
+        </div>
         {% endif %}
         <div class="bg-white flex flex-col justify-start p-6">
-            <a href="{% url 'category_detail' post.category.slug %}" class="text-blue-700 text-sm font-bold uppercase pb-4">{{ post.category.title }}</a>
-            <a href="{% url 'post_detail' post.slug %}" class="text-3xl font-bold hover:text-gray-700 pb-4">{{ post.title }}</a>
-            <p href="#" class="text-sm pb-3">
-                By <a href="#" class="font-semibold hover:text-gray-800">{{ post.author }}</a>, Published on {{ post.created_at | date:"M d, Y" }}
-            </p>
-            <h1 class="text-2xl font-bold pb-3"></h1>
-                <p class="pb-3">{{ post.content | safe }}</p>
+            <div class="flex items-center space-x-4 mb-4">
+                <a href="{% url 'category_detail' post.category.slug %}" 
+                   class="text-blue-700 text-sm font-bold uppercase hover:text-blue-900 transition-colors duration-200">
+                    {{ post.category.title }}
+                </a>
+                <span class="text-gray-500">•</span>
+                <time datetime="{{ post.created_at|date:'Y-m-d' }}" class="text-sm text-gray-600">
+                    {{ post.created_at|date:"M d, Y" }}
+                </time>
+            </div>
+            
+            <h1 class="text-4xl font-bold text-gray-900 mb-4">{{ post.title }}</h1>
+            <div class="prose max-w-none">
+                {{ post.content|safe }}
+            </div>
         </div>
     </article>
 
-    <!-- Sentiment Analysis -->
-    <div class="bg-white flex flex-col justify-start p-6">
-        <h2 class="text-lg font-bold mb-4">Sentiment Analysis</h2>
-        <p class="text-sm pb-3">Sentiment Score: {{ sentiment }}</p>
-    </div>
-
     <!-- Recommended Posts -->
-    <div class="bg-white flex flex-col justify-start p-6">
-        <h2 class="text-lg font-bold mb-4">Recommended Posts</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div class="bg-white rounded-lg shadow-lg p-6 w-full mb-8">
+        <h2 class="text-2xl font-bold mb-6 text-gray-900">Recommended Posts</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             {% for recommendation in recommendations %}
-                <div class="flex flex-col shadow-lg">
+                <a href="{% url 'post_detail' recommendation.slug %}" 
+                   class="group block rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300">
                     {% if recommendation.image %}
-                    <a href="{% url 'post_detail' recommendation.slug %}" class="hover:opacity-75">
-                        <img src="{{ recommendation.image.url }}" alt="" class="w-full h-48 object-cover">
-                    </a>
-                    {% endif %}
-                    <div class="bg-white flex flex-col justify-start p-4">
-                        <a href="{% url 'post_detail' recommendation.slug %}" class="text-lg font-bold hover:text-gray-700">{{ recommendation.title }}</a>
+                    <div class="relative h-48">
+                        <img src="{{ recommendation.image.url }}" 
+                             alt="{{ recommendation.title }}"
+                             class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-300"
+                             loading="lazy">
                     </div>
-                </div>
+                    {% endif %}
+                    <div class="p-4 bg-white">
+                        <h3 class="font-bold text-lg group-hover:text-blue-700 transition-colors duration-200">
+                            {{ recommendation.title }}
+                        </h3>
+                        <p class="text-gray-600 text-sm mt-2">{{ recommendation.intro|truncatewords:20 }}</p>
+                    </div>
+                </a>
             {% endfor %}
         </div>
     </div>
 
     <!-- Comments Section -->
-    <div class="container mx-auto mt-8">
-        <div class="bg-gray-100 p-6 rounded-lg shadow-md">
-            <h2 class="text-lg font-bold mb-4">Add a comment</h2>
-            <form class="bg-white p-4 rounded-lg shadow-md mb-6" action="{% url 'post_detail' post.slug %}" method="post">
-                {% csrf_token %}
-                {{ form.errors }}
-                {% for field in form %}
-                    <div class="mb-4">
-                        <label class="block text-gray-700 font-bold mb-2" for="name">{{ field.label }}</label>
-                        <input type="{{ field.field.widget.input_type }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" {{ field }}>
-                        </input>
+    <div class="w-full bg-white rounded-lg shadow-lg p-6 mb-8">
+        <h2 class="text-2xl font-bold mb-6 text-gray-900">Discussion</h2>
+        
+        <!-- Comment Form -->
+        <form class="mb-8 space-y-4" action="{% url 'post_detail' post.slug %}" method="post">
+            {% csrf_token %}
+            {% if form.errors %}
+            <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-4">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                        </svg>
                     </div>
-                {% endfor %}
-                <button
-                    class="bg-cyan-500 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                    type="submit">
-                    Submit
-                </button>
-            </form>
-            
-            <h2 class="text-lg font-bold mb-4">Comments</h2>
-            <div class="flex flex-col space-y-4">
-                {% if not post.comments.all %}
-                    <p class="text-gray-700">No comments yet</p>
-                {% endif %}
-                {% for comment in post.comments.all %}
-                    <div class="bg-white p-4 rounded-lg shadow-md">
-                        <h3 class="text-lg font-bold">{{ comment.name }}</h3>
-                        <p class="text-gray-700 text-sm mb-2">Posted {{ comment.created_at | timesince }} ago</p>
-                        <p class="text-gray-700">{{ comment.contents }}</p>
+                    <div class="ml-3">
+                        <p class="text-sm text-red-700">
+                            Please correct the errors below.
+                        </p>
                     </div>
-                {% endfor %}
+                </div>
             </div>
+            {% endif %}
+            
+            {% for field in form %}
+            <div class="space-y-1">
+                <label class="block text-sm font-medium text-gray-700" for="{{ field.id_for_label }}">
+                    {{ field.label }}
+                </label>
+                <div class="mt-1">
+                    {% if field.name == 'contents' %}
+                    <textarea
+                        name="{{ field.name }}"
+                        id="{{ field.id_for_label }}"
+                        class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md {% if field.errors %}border-red-500{% endif %}"
+                        rows="4"
+                    >{{ field.value|default:'' }}</textarea>
+                    {% else %}
+                    <input
+                        type="{{ field.field.widget.input_type }}"
+                        name="{{ field.name }}"
+                        id="{{ field.id_for_label }}"
+                        value="{{ field.value|default:'' }}"
+                        class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md {% if field.errors %}border-red-500{% endif %}"
+                    >
+                    {% endif %}
+                    {% if field.errors %}
+                    <p class="mt-1 text-sm text-red-600">{{ field.errors|join:", " }}</p>
+                    {% endif %}
+                    {% if field.help_text %}
+                    <p class="mt-1 text-sm text-gray-500">{{ field.help_text }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+            
+            <div class="mt-4">
+                <button type="submit"
+                    class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
+                    Post Comment
+                </button>
+            </div>
+        </form>
+
+        <!-- Comments List -->
+        <div class="space-y-6">
+            {% if post.comments.all %}
+                {% for comment in post.comments.all %}
+                <div class="bg-gray-50 rounded-lg p-6 transition-shadow duration-200 hover:shadow-md">
+                    <div class="flex items-start space-x-3">
+                        <div class="flex-shrink-0">
+                            <div class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center">
+                                <span class="text-white font-semibold text-lg">{{ comment.name|slice:":1" }}</span>
+                            </div>
+                        </div>
+                        <div class="min-w-0 flex-1">
+                            <div class="flex items-center justify-between">
+                                <h3 class="text-sm font-medium text-gray-900">{{ comment.name }}</h3>
+                                <time datetime="{{ comment.created_at|date:'Y-m-d H:i' }}" class="text-sm text-gray-500">
+                                    {{ comment.created_at|timesince }} ago
+                                </time>
+                            </div>
+                            <div class="mt-2 text-sm text-gray-700 space-y-4">
+                                {{ comment.contents|linebreaks }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="text-center py-12">
+                    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                    </svg>
+                    <h3 class="mt-2 text-sm font-medium text-gray-900">No comments yet</h3>
+                    <p class="mt-1 text-sm text-gray-500">Be the first to share your thoughts!</p>
+                </div>
+            {% endif %}
         </div>
     </div>
 </section>

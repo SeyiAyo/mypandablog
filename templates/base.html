@@ -2,22 +2,47 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RMVNQS155B"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-
-        gtag('config', 'G-RMVNQS155B');
-    </script>
-    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}{% endblock %} | myPandaBlog</title>
-    <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
     <meta name="author" content="Oluwaseyi Ayoola">
-    <meta name="description" content="">
+    <meta name="description" content="{% block meta_description %}A personal blog about technology, programming, and life.{% endblock %}">
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="{% static 'images/favicon.png' %}" as="image">
+    <link rel="preload" href="https://fonts.googleapis.com/css?family=Karla:400,700&display=swap" as="style">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" integrity="sha512-wnea99uKIC3TJF7v4eKk4Y+lMz2Mklv18+r4na2Gn1abDRPPOeef95xTzdwGD9e6zXJBteMIhZ1+68QC5byJZw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        /* Critical CSS */
+        @import url('https://fonts.googleapis.com/css?family=Karla:400,700&display=swap');
+        .font-family-karla { font-family: 'Karla', sans-serif; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+        .shadow-lg { box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+        .hover\:opacity-75:hover { opacity: 0.75; }
+        
+        /* Optimize images */
+        img { max-width: 100%; height: auto; }
+        
+        /* Add responsive design improvements */
+        @media (max-width: 768px) {
+            .container { padding: 1rem; }
+            .grid { grid-template-columns: 1fr; }
+        }
+    </style>
+
+    <!-- Defer non-critical scripts -->
+    <script defer src="https://www.googletagmanager.com/gtag/js?id=G-RMVNQS155B"></script>
+    <script defer>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-RMVNQS155B');
+    </script>
 
     <!-- Google Tag Manager -->
     <script>
@@ -29,44 +54,13 @@
     </script>
     <!-- End Google Tag Manager -->
 
-    <!-- Tailwind -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
-    <style>
-        @import url('https://fonts.googleapis.com/css?family=Karla:400,700&display=swap');
-
-        .font-family-karla {
-            font-family: karla;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-        }
-
-        .shadow-lg {
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .hover\:opacity-75:hover {
-            opacity: 0.75;
-        }
-
-        .object-cover {
-            object-fit: cover;
-        }
-        
-    </style>
-
     <!-- AlpineJS -->
-    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
+    <script defer src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js"></script>
     <!-- Font Awesome -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js" integrity="sha256-KzZiKy0DWYsnwMF+X1DvQngQ2/FxF7MF3Ff72XcpuPs=" crossorigin="anonymous"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js" integrity="sha256-KzZiKy0DWYsnwMF+X1DvQngQ2/FxF7MF3Ff72XcpuPs=" crossorigin="anonymous"></script>
     <!--Google ADsense verification-->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8595093953839028" crossorigin="anonymous"></script>
+    <script defer async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8595093953839028" crossorigin="anonymous"></script>
 </head>
-
-
 
 <body class="bg-white font-family-karla">
     <!-- Google Tag Manager (noscript) -->
@@ -76,8 +70,8 @@
         </iframe>
     </noscript>
     <!-- End Google Tag Manager (noscript) -->
-    
-    
+
+
     <!-- Top Bar Nav -->
     <nav class="w-full py-4 bg-blue-800 shadow">
         <div class="w-full container mx-auto flex flex-wrap items-center justify-between">
@@ -142,7 +136,7 @@
 
     <div class="container mx-auto flex flex-wrap py-6">
         {% block content %}
-        
+
         {% endblock %}
             <!-- Sidebar Section -->
         <aside class="w-full md:w-1/3 flex flex-col items-center px-3">
@@ -194,7 +188,8 @@
         >
             <button
                 class="absolute bg-blue-800 hover:bg-blue-700 text-white text-2xl font-bold hover:shadow rounded-full w-16 h-16 ml-12"
-                x-on:click="decrement()">
+                x-on:click="decrement()"
+            >
                 &#8592;
             </button>
             <template x-for="image in images.slice(currentIndex, currentIndex + 6)" :key="images.indexOf(image)">
@@ -202,7 +197,8 @@
             </template>
             <button
                 class="absolute right-0 bg-blue-800 hover:bg-blue-700 text-white text-2xl font-bold hover:shadow rounded-full w-16 h-16 mr-12"
-                x-on:click="increment()">
+                x-on:click="increment()"
+            >
                 &#8594;
             </button>
         </div>
@@ -236,7 +232,7 @@
                     this.currentIndex = this.currentIndex === this.images.length - 6 ? 0 : this.currentIndex + 1;
                 },
                 decrement() {
-                    this.currentIndex = this.currentIndex === this.images.length - 6 ? 0 : this.currentIndex - 1;
+                    this.currentIndex = this.currentIndex === 0 ? this.images.length - 6 : this.currentIndex - 1;
                 },
             }
         }

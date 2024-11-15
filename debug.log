@@ -1,0 +1,35 @@
+"GET /category/technology/ HTTP/1.1" 200 15927
+Not Found: /media/uploads/anime_flowers.jpeg
+"GET /media/uploads/anime_flowers.jpeg HTTP/1.1" 404 179
+Not Found: /media/uploads/anime_flowers.jpeg
+"GET /media/uploads/anime_flowers.jpeg HTTP/1.1" 404 179
+"GET /exploring-the-symbolism-of-flowers-in-anime/ HTTP/1.1" 200 23292
+Not Found: /static/images/favicon.png
+Not Found: /media/uploads/anime_flowers.jpeg
+"GET /static/images/favicon.png HTTP/1.1" 404 179
+"GET /media/uploads/anime_flowers.jpeg HTTP/1.1" 404 179
+C:\Users\USER\Documents\Dev Projects\mypandablog\mypandablog\settings.py changed, reloading.
+C:\Users\USER\Documents\Dev Projects\mypandablog\mypandablog\settings.py changed, reloading.
+C:\Users\USER\Documents\Dev Projects\mypandablog\mypandablog\settings.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET /exploring-the-symbolism-of-flowers-in-anime/ HTTP/1.1" 200 25722
+Not Found: /static/images/favicon.png
+"GET /static/images/favicon.png HTTP/1.1" 404 179
+Not Found: /media/uploads/anime_flowers.jpeg
+"GET /media/uploads/anime_flowers.jpeg HTTP/1.1" 404 179
+"GET / HTTP/1.1" 200 20487
+Not Found: /static/images/favicon.png
+"GET /static/images/favicon.png HTTP/1.1" 404 179
+Not Found: /media/uploads/anime_flowers.jpeg
+"GET /media/uploads/anime_flowers.jpeg HTTP/1.1" 404 179
+Not Found: /static/images/favicon.png
+"GET /static/images/favicon.png HTTP/1.1" 404 179
+Not Found: /static/images/favicon.png
+"GET /static/images/favicon.png HTTP/1.1" 404 179
+Not Found: /media/uploads/anime_flowers.jpeg
+"GET /media/uploads/anime_flowers.jpeg HTTP/1.1" 404 179
+C:\Users\USER\Documents\Dev Projects\mypandablog\blog\models.py changed, reloading.
+Watching for file changes with StatReloader
