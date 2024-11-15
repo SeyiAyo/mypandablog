@@ -43,32 +43,6 @@
                     </div>
                 </div>
                 
-                <!-- User Authentication -->
-                <div class="hidden md:ml-6 md:flex md:items-center">
-                    <div class="ml-3 relative">
-                        {% if user.is_authenticated %}
-                            <div class="flex items-center space-x-4">
-                                <a href="{% url 'profile' %}" class="text-sm text-gray-700 hover:text-gray-900">
-                                    <i class="fas fa-user-circle mr-1"></i>
-                                    {{ user.username }}
-                                </a>
-                                <a href="{% url 'account_logout' %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700">
-                                    Sign Out
-                                </a>
-                            </div>
-                        {% else %}
-                            <div class="flex items-center space-x-4">
-                                <a href="{% url 'account_login' %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
-                                    Sign In
-                                </a>
-                                <a href="{% url 'account_signup' %}" class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
-                                    Sign Up
-                                </a>
-                            </div>
-                        {% endif %}
-                    </div>
-                </div>
-
                 <!-- Mobile menu button -->
                 <div class="flex items-center md:hidden">
                     <button type="button" class="mobile-menu-button inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100">
@@ -85,51 +59,13 @@
                 <a href="{% url 'frontpage' %}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">Home</a>
                 <a href="{% url 'about' %}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">About</a>
                 <a href="{% url 'contact' %}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">Contact</a>
-                {% if user.is_authenticated %}
-                    <a href="{% url 'profile' %}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">Profile</a>
-                    <a href="{% url 'account_logout' %}" class="block px-3 py-2 rounded-md text-base font-medium text-red-600 hover:text-red-700 hover:bg-gray-50">Sign Out</a>
-                {% else %}
-                    <a href="{% url 'account_login' %}" class="block px-3 py-2 rounded-md text-base font-medium text-blue-600 hover:text-blue-700 hover:bg-gray-50">Sign In</a>
-                    <a href="{% url 'account_signup' %}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">Sign Up</a>
-                {% endif %}
             </div>
         </div>
     </nav>
 
     <!-- Main Content -->
     <div class="container mx-auto px-4 py-8">
-        {% block messages %}
-            {% if messages %}
-                <div id="messages-container">
-                    {% for message in messages %}
-                        <div class="mb-4 p-4 rounded-md {% if message.tags == 'error' %}bg-red-100 text-red-700{% elif message.tags == 'success' %}bg-green-100 text-green-700{% else %}bg-blue-100 text-blue-700{% endif %} flex justify-between items-center message-alert">
-                            <span>{{ message }}</span>
-                            <button onclick="this.parentElement.remove()" class="text-gray-500 hover:text-gray-700">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </div>
-                    {% endfor %}
-                </div>
-                <script>
-                    // Auto-hide messages after 5 seconds
-                    document.addEventListener('DOMContentLoaded', function() {
-                        setTimeout(function() {
-                            const messages = document.querySelectorAll('.message-alert');
-                            messages.forEach(message => {
-                                message.style.transition = 'opacity 0.5s';
-                                message.style.opacity = '0';
-                                setTimeout(() => message.remove(), 500);
-                            });
-                        }, 5000);
-                    });
-
-                    // Clear Django messages from session storage
-                    if (window.history.replaceState) {
-                        window.history.replaceState(null, null, window.location.href);
-                    }
-                </script>
-            {% endif %}
-        {% endblock %}
+        {% block messages %}{% endblock %}
         
         {% block content %}{% endblock %}
     </div>

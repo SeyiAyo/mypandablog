@@ -1,1 +1,0 @@
-Please Confirm Your Email for {{ current_site.name }}

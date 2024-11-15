@@ -1,9 +1,9 @@
 from django.contrib import admin
-from .models import Post, Category, Comment, UserProfile, Newsletter, PostView
+from .models import Post, Category, Comment, Newsletter, PostView
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
-    list_display = ['title', 'category', 'author', 'created_at', 'status']
+    list_display = ['title', 'category', 'created_at', 'status']
     list_filter = ['status', 'category', 'created_at']
     search_fields = ['title', 'intro', 'content']
     prepopulated_fields = {'slug': ('title',)}
@@ -23,11 +23,6 @@ class CommentAdmin(admin.ModelAdmin):
     search_fields = ['name', 'email', 'contents']
     date_hierarchy = 'created_at'
 
-@admin.register(UserProfile)
-class UserProfileAdmin(admin.ModelAdmin):
-    list_display = ['user', 'website', 'twitter', 'github']
-    search_fields = ['user__username', 'user__email', 'bio']
-
 @admin.register(Newsletter)
 class NewsletterAdmin(admin.ModelAdmin):
     list_display = ['email', 'name', 'created_at', 'is_active']
@@ -36,9 +31,9 @@ class NewsletterAdmin(admin.ModelAdmin):
 
 @admin.register(PostView)
 class PostViewAdmin(admin.ModelAdmin):
-    list_display = ['post', 'user', 'ip_address', 'created_at']
+    list_display = ['post', 'ip_address', 'created_at']
     list_filter = ['created_at']
     date_hierarchy = 'created_at'
-    search_fields = ['post__title', 'user__username', 'ip_address']
+    search_fields = ['post__title', 'ip_address']
 
 admin.site.site_header = 'MyPandaBlog Administration'

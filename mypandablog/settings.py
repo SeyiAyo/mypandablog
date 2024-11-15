@@ -64,23 +64,17 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.sites',  # Required for django-allauth
     'blog',
     'ckeditor',
     'taggit',
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
     'crispy_forms',
     'hitcount',
     'compressor',
-    'debug_toolbar',
     'markdown',
     'markdown_deux',
 ]
 
 MIDDLEWARE = [
-    'debug_toolbar.middleware.DebugToolbarMiddleware',  # Debug toolbar middleware
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -88,7 +82,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'allauth.account.middleware.AccountMiddleware',  # django-allauth middleware
     'django.middleware.cache.UpdateCacheMiddleware',
     'django.middleware.cache.FetchFromCacheMiddleware',
 ]
@@ -203,28 +196,6 @@ LOGGING = {
     },
 }
 
-# django-allauth configuration
-AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend',
-]
-
-SITE_ID = 1
-
-# django-allauth settings
-ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_EMAIL_VERIFICATION = 'optional'
-ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = True
-ACCOUNT_USERNAME_MIN_LENGTH = 4
-LOGIN_REDIRECT_URL = '/'
-ACCOUNT_LOGOUT_REDIRECT_URL = '/'
-ACCOUNT_LOGOUT_ON_GET = True  # Enable logout on GET request
-ACCOUNT_PRESERVE_USERNAME_CASING = False
-ACCOUNT_SESSION_REMEMBER = True
-ACCOUNT_UNIQUE_EMAIL = True
-ACCOUNT_USERNAME_REQUIRED = True
-
 # Message settings
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 
@@ -244,11 +215,11 @@ ACCOUNT_RATE_LIMITS = {
 }
 
 # Custom forms
-ACCOUNT_FORMS = {
-    'login': 'blog.forms.CustomLoginForm',
-    'signup': 'blog.forms.CustomSignupForm',
-    'reset_password': 'blog.forms.CustomPasswordResetForm',
-}
+# ACCOUNT_FORMS = {
+#     'login': 'blog.forms.CustomLoginForm',
+#     'signup': 'blog.forms.CustomSignupForm',
+#     'reset_password': 'blog.forms.CustomPasswordResetForm',
+# }
 
 # Crispy Forms
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
