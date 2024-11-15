@@ -664,3 +664,19 @@ Watching for file changes with StatReloader
 C:\Users\USER\Documents\Dev Projects\mypandablog\blog\migrations\__init__.py changed, reloading.
 Watching for file changes with StatReloader
 "POST /admin/login/?next=/admin/ HTTP/1.1" 200 4340
+C:\Users\USER\Documents\Dev Projects\mypandablog\mypandablog\settings.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\Documents\Dev Projects\mypandablog\blog\admin.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\USER\Documents\Dev Projects\mypandablog\blog\admin.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /admin/ HTTP/1.1" 302 0
+"GET /admin/login/?next=/admin/ HTTP/1.1" 200 3354
+"GET /static/jazzmin/css/main.css HTTP/1.1" 200 16969
+"GET /static/vendor/fontawesome-free/css/all.min.css HTTP/1.1" 200 59344
+"GET /static/vendor/adminlte/img/AdminLTELogo.png HTTP/1.1" 200 2637
+"GET /static/vendor/bootswatch/cyborg/bootstrap.min.css HTTP/1.1" 200 164597
+"GET /static/vendor/adminlte/css/adminlte.min.css HTTP/1.1" 200 1382975
+"GET /static/vendor/adminlte/js/adminlte.min.js HTTP/1.1" 200 44244
+"GET /static/vendor/bootstrap/js/bootstrap.min.js HTTP/1.1" 200 62440
+"GET /static/vendor/fontawesome-free/webfonts/fa-solid-900.woff2 HTTP/1.1" 200 78196
