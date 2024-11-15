@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils.text import slugify
 from django.utils.html import strip_tags
-from ckeditor.fields import RichTextField
+from django_ckeditor_5.fields import CKEditor5Field
 from taggit.managers import TaggableManager
 
 class Category(models.Model):
@@ -42,8 +42,8 @@ class Post(models.Model):
     slug = models.SlugField(db_index=True, unique=True)
     category = models.ForeignKey(Category, related_name="posts", on_delete=models.CASCADE)
     
-    intro = RichTextField(blank=True, null=True)
-    content = RichTextField(blank=True, null=True)
+    intro = CKEditor5Field(blank=True, null=True, config_name='default')
+    content = CKEditor5Field(blank=True, null=True, config_name='default')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     published_at = models.DateTimeField(null=True, blank=True)

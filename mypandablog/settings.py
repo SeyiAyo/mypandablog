@@ -65,7 +65,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'blog',
-    'ckeditor',
+    'django_ckeditor_5',
     'taggit',
     'crispy_forms',
     'hitcount',
@@ -224,14 +224,21 @@ ACCOUNT_RATE_LIMITS = {
 # Crispy Forms
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
-# CKEditor
-CKEDITOR_CONFIGS = {
+# Django CKEditor 5 configuration
+CKEDITOR_5_CONFIGS = {
     'default': {
-        'toolbar': 'full',
-        'height': 300,
+        'toolbar': ['heading', '|', 'bold', 'italic', 'link',
+                   'bulletedList', 'numberedList', 'blockQuote', 'imageUpload', '|',
+                   'code', 'codeBlock', '|',
+                   'insertTable', '|',
+                   'undo', 'redo'],
+        'height': '400px',
         'width': '100%',
     },
 }
+
+CKEDITOR_5_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
+CKEDITOR_5_UPLOAD_PATH = "uploads/"
 
 # Debug Toolbar
 INTERNAL_IPS = [
