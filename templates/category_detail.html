@@ -1,39 +1,72 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}{{ category.title }}{% endblock %}
 
 {% block content %}
-{% load markdown_deux_tags %}
-<!-- Posts Section -->
-<section class="w-full md:w-2/3 flex flex-col items-center px-3">
-    {% for post in category.posts.all %}
-        <article class="flex flex-col shadow my-4">
-            <!-- Article Image -->
-            {% if post.image %}
-            <a href="#" class="hover:opacity-75">
-                <img src="{{ post.image.url }}" alt="">
-            </a>
-            {% endif %}
-            <div class="bg-white flex flex-col justify-start p-6">
-                <a href="{% url 'category_detail' post.category.slug %}" class="text-blue-700 text-sm font-bold uppercase pb-4">{{ post.category.title }}</a>
-                <a href="{% url 'post_detail' post.slug %}" class="text-3xl font-bold hover:text-gray-700 pb-4">{{ post.title }}</a>
-                <p href="#" class="text-sm pb-3">
-                    By <a href="#" class="font-semibold hover:text-gray-800">{{ post.author }}</a>, Published on {{ post.created_at | date:"M d, Y" }}
-                </p>
-                <a href="#" class="pb-6">{{ post.intro | safe }}</a>
-                <a href="{% url 'post_detail' post.slug %}" class="uppercase text-gray-800 hover:text-black">Continue Reading <i class="fas fa-arrow-right"></i></a>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="py-8">
+        <h1 class="text-3xl font-bold text-gray-900 mb-4">{{ category.title }}</h1>
+        {% if category.description %}
+            <p class="text-gray-600 mb-8">{{ category.description }}</p>
+        {% endif %}
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for post in category.posts.all %}
+            <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                {% if post.image %}
+                    <img src="{{ post.image.url }}" alt="{{ post.title }}" class="w-full h-48 object-cover">
+                {% endif %}
+                <div class="p-6">
+                    <div class="flex items-center mb-4">
+                        <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded">{{ post.category }}</span>
+                        <span class="text-gray-500 text-sm ml-4">{{ post.created_at|date }}</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">
+                        <a href="{% url 'post_detail' post.category.slug post.slug %}" class="hover:text-blue-600">{{ post.title }}</a>
+                    </h3>
+                    <p class="text-gray-600 mb-4">{{ post.intro|truncatewords:25 }}</p>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <img src="{% static 'images/default-avatar.png' %}" alt="{{ post.author }}" class="w-8 h-8 rounded-full">
+                            <span class="text-sm text-gray-600 ml-2">{{ post.author }}</span>
+                        </div>
+                        <div class="flex items-center text-sm text-gray-500">
+                            <i class="far fa-eye mr-1"></i>
+                            <span>{{ post.get_hit_count }}</span>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </article>
-    {% endfor %}
+        {% endfor %}
+    </div>
 
+    <!-- Pagination -->
+    {% if posts.has_other_pages %}
+        <div class="flex justify-center space-x-1 py-8">
+            {% if posts.has_previous %}
+                <a href="?page={{ posts.previous_page_number }}" class="px-4 py-2 text-gray-700 bg-gray-200 rounded-md hover:bg-blue-600 hover:text-white">
+                    Previous
+                </a>
+            {% endif %}
 
-        <!-- Pagination -->
-        {% include 'pagination.html' with page=posts %}
-        <!-- <div class="flex items-center py-8">
-            <a href="#" class="h-10 w-10 bg-blue-800 hover:bg-blue-600 font-semibold text-white text-sm flex items-center justify-center">1</a>
-            <a href="#" class="h-10 w-10 font-semibold text-gray-800 hover:bg-blue-600 hover:text-white text-sm flex items-center justify-center">2</a>
-            <a href="#" class="h-10 w-10 font-semibold text-gray-800 hover:text-gray-900 text-sm flex items-center justify-center ml-3">Next <i class="fas fa-arrow-right ml-2"></i></a>
-        </div> -->
+            {% for num in posts.paginator.page_range %}
+                {% if posts.number == num %}
+                    <span class="px-4 py-2 text-white bg-blue-600 rounded-md">{{ num }}</span>
+                {% else %}
+                    <a href="?page={{ num }}" class="px-4 py-2 text-gray-700 bg-gray-200 rounded-md hover:bg-blue-600 hover:text-white">
+                        {{ num }}
+                    </a>
+                {% endif %}
+            {% endfor %}
 
-</section>
+            {% if posts.has_next %}
+                <a href="?page={{ posts.next_page_number }}" class="px-4 py-2 text-gray-700 bg-gray-200 rounded-md hover:bg-blue-600 hover:text-white">
+                    Next
+                </a>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
 {% endblock %}

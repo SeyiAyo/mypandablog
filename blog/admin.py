@@ -30,8 +30,8 @@ class UserProfileAdmin(admin.ModelAdmin):
 
 @admin.register(Newsletter)
 class NewsletterAdmin(admin.ModelAdmin):
-    list_display = ['email', 'name', 'subscribed_at', 'is_active']
-    list_filter = ['is_active', 'subscribed_at']
+    list_display = ['email', 'name', 'created_at', 'is_active']
+    list_filter = ['is_active', 'created_at']
     search_fields = ['email', 'name']
 
 @admin.register(PostView)

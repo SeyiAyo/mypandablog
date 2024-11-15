@@ -1,55 +1,84 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}About{% endblock %}
 
 {% block content %}
-{% load markdown_deux_tags %}
-<!-- Posts Section -->
-<section class="w-full md:w-2/3 flex flex-col items-center px-3">
-        <article class="flex flex-col shadow my-4">
-            <div class="bg-white flex flex-col justify-start p-6">
-                </p>
-                <h1 class="text-2xl font-bold pb-3">Who We Are:</h1>
-                    <p class="pb-3">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+        <div class="p-8">
+            <h1 class="text-4xl font-bold text-gray-900 mb-8">About myPanda</h1>
+
+            <div class="space-y-8">
+                <section>
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Who We Are</h2>
+                    <p class="text-gray-600 leading-relaxed">
                         myPanda is more than just a blog; it's a vibrant community of thinkers, creators, and enthusiasts from all walks of life. Whether you're a seasoned professional seeking career advice, a hobbyist looking for creative inspiration, or simply someone eager to explore new ideas, myPanda is your virtual sanctuary.
                     </p>
-                    <br>
-                    <h1 class="text-2xl font-bold pb-3">What We Offer:</h1>
-                    <p class="pb-3">
-                        Diverse Content: From tech trends to travel tips, wellness advice to world news, myPanda covers a wide array of topics curated to pique your interest and expand your horizons. <br>
-                        Expert Insights: Our team of writers and contributors are experts in their respective fields, delivering well-researched, thought-provoking articles that provide valuable insights and actionable advice. <br>
-                        Community Engagement: We believe in the power of community. Join the conversation, share your thoughts, and connect with like-minded individuals through our interactive platform and social channels. <br>
-                        Inspiration and Motivation: Whether you're seeking motivation to pursue your passions or inspiration to overcome challenges, myPanda is here to uplift and empower you on your journey.
-                    </p>
+                </section>
 
-                        <br>
+                <section>
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">What We Offer</h2>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="bg-gray-50 p-6 rounded-lg">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-2">Diverse Content</h3>
+                            <p class="text-gray-600">From tech trends to travel tips, wellness advice to world news, myPanda covers a wide array of topics curated to pique your interest and expand your horizons.</p>
+                        </div>
+                        <div class="bg-gray-50 p-6 rounded-lg">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-2">Expert Insights</h3>
+                            <p class="text-gray-600">Our team of writers and contributors are experts in their respective fields, delivering well-researched, thought-provoking articles that provide valuable insights and actionable advice.</p>
+                        </div>
+                        <div class="bg-gray-50 p-6 rounded-lg">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-2">Community Engagement</h3>
+                            <p class="text-gray-600">We believe in the power of community. Join the conversation, share your thoughts, and connect with like-minded individuals through our interactive platform and social channels.</p>
+                        </div>
+                        <div class="bg-gray-50 p-6 rounded-lg">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-2">Inspiration and Motivation</h3>
+                            <p class="text-gray-600">Whether you're seeking motivation to pursue your passions or inspiration to overcome challenges, myPanda is here to uplift and empower you on your journey.</p>
+                        </div>
+                    </div>
+                </section>
 
-                        <h1 class="text-2xl font-bold pb-3">Why Choose myPanda:</h1>
-                        <p class="pb-3">
-                        Quality Content: We're committed to delivering content that informs, entertains, and inspires. Each article is meticulously crafted to ensure relevance, accuracy, and readability. <br>
-                        User-Friendly Experience: Navigating myPanda is a breeze. Our intuitive interface and user-friendly design make it easy to find the content you love and discover new favorites. <br>
-                        Constant Innovation: We're always evolving to meet the needs of our readers. From introducing new features to exploring emerging trends, we're dedicated to staying ahead of the curve. <br>
-                        Community-Centric Approach: At myPanda, you're not just a reader – you're part of our family. We value your feedback, ideas, and contributions, and strive to create a welcoming environment where everyone feels heard and appreciated.
-                        </p>
-    
-                            <br>
-                        
-                            <h1 class="text-2xl font-bold pb-3">Join Us Today:</h1>
-                        <p class="pb-3">
-                            Ready to embark on a journey of discovery and inspiration? Dive into the world of myPanda and unlock a treasure trove of knowledge, creativity, and connection. Whether you're here to learn, explore, or simply unwind, we invite you to make myPanda your go-to destination for all things meaningful and enriching. Welcome aboard!</p>
-                        </p>
-    
-                            <br>
-
+                <section>
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Why Choose myPanda</h2>
+                    <div class="space-y-4">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0">
+                                <div class="flex items-center justify-center h-12 w-12 rounded-md bg-blue-500 text-white">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                            </div>
+                            <div class="ml-4">
+                                <h3 class="text-lg font-semibold text-gray-900">Quality Content</h3>
+                                <p class="text-gray-600">We're committed to delivering content that informs, entertains, and inspires. Each article is meticulously crafted to ensure relevance, accuracy, and readability.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0">
+                                <div class="flex items-center justify-center h-12 w-12 rounded-md bg-blue-500 text-white">
+                                    <i class="fas fa-user-friends"></i>
+                                </div>
+                            </div>
+                            <div class="ml-4">
+                                <h3 class="text-lg font-semibold text-gray-900">User-Friendly Experience</h3>
+                                <p class="text-gray-600">Navigating myPanda is a breeze. Our intuitive interface and user-friendly design make it easy to find the content you love and discover new favorites.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0">
+                                <div class="flex items-center justify-center h-12 w-12 rounded-md bg-blue-500 text-white">
+                                    <i class="fas fa-rocket"></i>
+                                </div>
+                            </div>
+                            <div class="ml-4">
+                                <h3 class="text-lg font-semibold text-gray-900">Constant Innovation</h3>
+                                <p class="text-gray-600">We're always evolving to meet the needs of our community, implementing new features and improvements based on your feedback.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
             </div>
-        </article>
-
-        <!-- Pagination -->
-        <!-- <div class="flex items-center py-8">
-            <a href="#" class="h-10 w-10 bg-blue-800 hover:bg-blue-600 font-semibold text-white text-sm flex items-center justify-center">1</a>
-            <a href="#" class="h-10 w-10 font-semibold text-gray-800 hover:bg-blue-600 hover:text-white text-sm flex items-center justify-center">2</a>
-            <a href="#" class="h-10 w-10 font-semibold text-gray-800 hover:text-gray-900 text-sm flex items-center justify-center ml-3">Next <i class="fas fa-arrow-right ml-2"></i></a>
-        </div> -->
-
-</section>
+        </div>
+    </div>
+</div>
 {% endblock %}

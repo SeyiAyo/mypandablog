@@ -1,0 +1,174 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Profile{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Profile Header -->
+    <div class="bg-white shadow rounded-lg mb-6 p-6">
+        <div class="flex items-center space-x-4">
+            <div class="flex-shrink-0">
+                <img class="h-16 w-16 rounded-full" src="{% static 'images/default-avatar.png' %}" alt="{{ user.username }}'s avatar">
+            </div>
+            <div>
+                <h1 class="text-2xl font-bold text-gray-900">{{ user.username }}</h1>
+                <p class="text-gray-500">Member since {{ user.date_joined|date:"F j, Y" }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Content Tabs -->
+    <div class="bg-white shadow rounded-lg">
+        <div class="border-b border-gray-200">
+            <nav class="-mb-px flex">
+                <button onclick="showTab('posts')" class="tab-button w-1/2 py-4 px-1 text-center border-b-2 font-medium text-sm focus:outline-none" data-tab="posts">
+                    My Posts
+                </button>
+                <button onclick="showTab('comments')" class="tab-button w-1/2 py-4 px-1 text-center border-b-2 font-medium text-sm focus:outline-none" data-tab="comments">
+                    My Comments
+                </button>
+            </nav>
+        </div>
+
+        <!-- Posts Tab -->
+        <div id="posts-tab" class="tab-content p-6">
+            {% if user_posts %}
+                <div class="space-y-6">
+                    {% for post in user_posts %}
+                        <div class="bg-gray-50 rounded-lg p-4">
+                            <h3 class="text-lg font-semibold text-gray-900">
+                                <a href="{% url 'post_detail' post.category.slug post.slug %}" class="hover:text-blue-600">
+                                    {{ post.title }}
+                                </a>
+                            </h3>
+                            <div class="mt-2 text-sm text-gray-500">
+                                <span>{{ post.created_at|date:"F j, Y" }}</span>
+                                <span class="mx-2">•</span>
+                                <span>{{ post.category.title }}</span>
+                            </div>
+                            <p class="mt-2 text-gray-600">{{ post.intro|truncatewords:30 }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+                
+                <!-- Posts Pagination -->
+                {% if user_posts.has_other_pages %}
+                    <div class="mt-6 flex justify-center">
+                        <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
+                            {% if user_posts.has_previous %}
+                                <a href="?post_page={{ user_posts.previous_page_number }}" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                    Previous
+                                </a>
+                            {% endif %}
+                            
+                            {% for i in user_posts.paginator.page_range %}
+                                <a href="?post_page={{ i }}" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium {% if user_posts.number == i %}text-blue-600 bg-blue-50{% else %}text-gray-700 hover:bg-gray-50{% endif %}">
+                                    {{ i }}
+                                </a>
+                            {% endfor %}
+                            
+                            {% if user_posts.has_next %}
+                                <a href="?post_page={{ user_posts.next_page_number }}" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                    Next
+                                </a>
+                            {% endif %}
+                        </nav>
+                    </div>
+                {% endif %}
+            {% else %}
+                <div class="text-center py-12">
+                    <p class="text-gray-500">You haven't created any posts yet.</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Comments Tab -->
+        <div id="comments-tab" class="tab-content p-6 hidden">
+            {% if user_comments %}
+                <div class="space-y-6">
+                    {% for comment in user_comments %}
+                        <div class="bg-gray-50 rounded-lg p-4">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h4 class="text-sm font-semibold text-gray-900">
+                                        On: <a href="{% url 'post_detail' comment.post.category.slug comment.post.slug %}" class="hover:text-blue-600">
+                                            {{ comment.post.title }}
+                                        </a>
+                                    </h4>
+                                    <p class="mt-1 text-gray-600">{{ comment.content }}</p>
+                                </div>
+                                <span class="text-sm text-gray-500">{{ comment.created_at|date:"F j, Y" }}</span>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                
+                <!-- Comments Pagination -->
+                {% if user_comments.has_other_pages %}
+                    <div class="mt-6 flex justify-center">
+                        <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
+                            {% if user_comments.has_previous %}
+                                <a href="?comment_page={{ user_comments.previous_page_number }}" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                    Previous
+                                </a>
+                            {% endif %}
+                            
+                            {% for i in user_comments.paginator.page_range %}
+                                <a href="?comment_page={{ i }}" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium {% if user_comments.number == i %}text-blue-600 bg-blue-50{% else %}text-gray-700 hover:bg-gray-50{% endif %}">
+                                    {{ i }}
+                                </a>
+                            {% endfor %}
+                            
+                            {% if user_comments.has_next %}
+                                <a href="?comment_page={{ user_comments.next_page_number }}" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                    Next
+                                </a>
+                            {% endif %}
+                        </nav>
+                    </div>
+                {% endif %}
+            {% else %}
+                <div class="text-center py-12">
+                    <p class="text-gray-500">You haven't made any comments yet.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+    function showTab(tabName) {
+        // Hide all tab contents
+        document.querySelectorAll('.tab-content').forEach(tab => {
+            tab.classList.add('hidden');
+        });
+        
+        // Remove active state from all tab buttons
+        document.querySelectorAll('.tab-button').forEach(button => {
+            button.classList.remove('border-blue-500', 'text-blue-600');
+            button.classList.add('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
+        });
+        
+        // Show selected tab content
+        const selectedTab = document.getElementById(tabName + '-tab');
+        if (selectedTab) {
+            selectedTab.classList.remove('hidden');
+        }
+        
+        // Set active state for selected tab button
+        const selectedButton = document.querySelector(`[data-tab="${tabName}"]`);
+        if (selectedButton) {
+            selectedButton.classList.remove('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
+            selectedButton.classList.add('border-blue-500', 'text-blue-600');
+        }
+    }
+    
+    // Set initial active tab
+    document.addEventListener('DOMContentLoaded', function() {
+        showTab('posts');
+    });
+</script>
+{% endblock %}
+{% endblock %}

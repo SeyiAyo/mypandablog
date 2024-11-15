@@ -42,7 +42,7 @@ class Post(models.Model):
     title = models.CharField(max_length=255, db_index=True)
     slug = models.SlugField(db_index=True, unique=True)
     category = models.ForeignKey(Category, related_name="posts", on_delete=models.CASCADE)
-    author = models.CharField(max_length=255)
+    author = models.ForeignKey(User, related_name="posts", on_delete=models.CASCADE)
     
     intro = RichTextField(blank=True, null=True)
     content = RichTextField(blank=True, null=True)
@@ -119,21 +119,22 @@ class Comment(models.Model):
     contents = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    likes = models.ManyToManyField(User, related_name="liked_comments", blank=True)
+    likes = models.ManyToManyField(User, related_name="liked_comments")
     is_approved = models.BooleanField(default=True)
-    
+
     class Meta:
         ordering = ["-created_at"]
         indexes = [
             models.Index(fields=['post', 'created_at']),
             models.Index(fields=['user', 'created_at']),
         ]
-    
+
     def __str__(self):
-        return f'{self.post.title} - {self.name}'
-    
+        return f"Comment by {self.name} on {self.post.title}"
+
     @property
     def likes_count(self):
+        """Get the number of likes for this comment."""
         return self.likes.count()
 
 class UserProfile(models.Model):
@@ -154,7 +155,7 @@ class Newsletter(models.Model):
     """Newsletter subscription model."""
     email = models.EmailField(unique=True)
     name = models.CharField(max_length=255, blank=True)
-    subscribed_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
     
     def __str__(self):

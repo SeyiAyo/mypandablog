@@ -1,53 +1,148 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Home{% endblock %}
 
-{% block meta_description %}Welcome to myPanda Blog - Your source for insightful articles about technology, programming, and life.{% endblock %}
-
 {% block content %}
-{% load markdown_deux_tags %}
-<!-- Posts Section -->
-<section class="w-full md:w-2/3 flex flex-col items-center px-3">
-    {% for post in posts %}
-        <article class="flex flex-col shadow my-4 hover:shadow-lg transition-shadow duration-200">
-            <!-- Article Image -->
-            {% if post.image %}
-            <a href="{% url 'post_detail' post.slug %}" class="hover:opacity-75 transition-opacity duration-200">
-                <img src="{{ post.image.url }}" 
-                     alt="{{ post.title }}"
-                     loading="lazy"
-                     class="w-full h-64 object-cover">
-            </a>
-            {% endif %}
-            <div class="bg-white flex flex-col justify-start p-6">
-                <a href="{% url 'category_detail' post.category.slug %}" 
-                   class="text-blue-700 text-sm font-bold uppercase pb-4 hover:text-blue-900 transition-colors duration-200">
-                    {{ post.category.title }}
-                </a>
-                <a href="{% url 'post_detail' post.slug %}" 
-                   class="text-3xl font-bold hover:text-gray-700 pb-4 transition-colors duration-200">
-                    {{ post.title }}
-                </a>
-                <p class="text-sm pb-3">
-                    By <span class="font-semibold">{{ post.author }}</span>, Published on {{ post.created_at | date:"M d, Y" }}
-                </p>
-                <div class="pb-6">{{ post.intro | safe | truncatewords:50 }}</div>
-                <a href="{% url 'post_detail' post.slug %}" 
-                   class="uppercase text-gray-800 hover:text-black transition-colors duration-200 inline-flex items-center">
-                    Continue Reading 
-                    <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
-                    </svg>
-                </a>
+<div class="max-w-7xl mx-auto">
+    <!-- Featured Posts Section -->
+    {% if featured_posts %}
+    <div class="mb-12">
+        <h2 class="text-2xl font-bold text-gray-900 mb-6">Featured Posts</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {% for post in featured_posts|slice:":3" %}
+            <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                {% if post.image %}
+                <img src="{{ post.image.url }}" alt="{{ post.title }}" class="w-full h-48 object-cover">
+                {% endif %}
+                <div class="p-6">
+                    <div class="flex items-center mb-4">
+                        <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded">{{ post.category }}</span>
+                        <span class="text-gray-500 text-sm ml-4">{{ post.created_at|date }}</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">
+                        <a href="{% url 'post_detail' post.category.slug post.slug %}" class="hover:text-blue-600">{{ post.title }}</a>
+                    </h3>
+                    <p class="text-gray-600 mb-4">{{ post.intro|truncatewords:25 }}</p>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <img src="{% if post.author.userprofile.avatar %}{{ post.author.userprofile.avatar.url }}{% else %}{% static 'images/default-avatar.png' %}{% endif %}" 
+                                 alt="{{ post.author }}" 
+                                 class="w-8 h-8 rounded-full">
+                            <span class="text-sm text-gray-600 ml-2">{{ post.author }}</span>
+                        </div>
+                        <div class="flex items-center text-sm text-gray-500">
+                            <i class="far fa-eye mr-1"></i>
+                            <span>{{ post.get_hit_count }}</span>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </article>
-    {% empty %}
-        <div class="text-center py-8">
-            <p class="text-gray-600">No posts available at the moment.</p>
+            {% endfor %}
         </div>
-    {% endfor %}
+    </div>
+    {% endif %}
 
-    <!-- Pagination -->
-    {% include 'pagination.html' with page=posts %}
-</section>
+    <!-- Latest Posts Section -->
+    <div class="flex flex-col md:flex-row gap-8">
+        <!-- Main Content -->
+        <div class="w-full md:w-2/3">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">Latest Posts</h2>
+            <div class="space-y-8">
+                {% for post in posts %}
+                <article class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                    <div class="md:flex">
+                        {% if post.image %}
+                        <div class="md:flex-shrink-0">
+                            <img src="{{ post.image.url }}" alt="{{ post.title }}" class="h-48 w-full md:w-48 object-cover">
+                        </div>
+                        {% endif %}
+                        <div class="p-6">
+                            <div class="flex items-center mb-2">
+                                <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded">{{ post.category }}</span>
+                                <span class="text-gray-500 text-sm ml-4">{{ post.created_at|date }}</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-900 mb-2">
+                                <a href="{% url 'post_detail' post.category.slug post.slug %}" class="hover:text-blue-600">{{ post.title }}</a>
+                            </h3>
+                            <p class="text-gray-600 mb-4">{{ post.intro|truncatewords:30 }}</p>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <img src="{% if post.author.userprofile.avatar %}{{ post.author.userprofile.avatar.url }}{% else %}{% static 'images/default-avatar.png' %}{% endif %}" 
+                                         alt="{{ post.author }}" 
+                                         class="w-8 h-8 rounded-full">
+                                    <span class="text-sm text-gray-600 ml-2">{{ post.author }}</span>
+                                </div>
+                                <div class="flex items-center space-x-4 text-sm text-gray-500">
+                                    <div class="flex items-center">
+                                        <i class="far fa-eye mr-1"></i>
+                                        <span>{{ post.get_hit_count }}</span>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <i class="far fa-comment mr-1"></i>
+                                        <span>{{ post.comments.count }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+                {% endfor %}
+            </div>
+            
+            <!-- Pagination -->
+            {% if posts.has_other_pages %}
+            <div class="mt-8">
+                {% include 'pagination.html' with page=posts %}
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Sidebar -->
+        <div class="w-full md:w-1/3">
+            <!-- Search Widget -->
+            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Search</h3>
+                <form action="{% url 'search' %}" method="get">
+                    <div class="flex">
+                        <input type="text" name="query" placeholder="Search posts..." 
+                               class="flex-1 rounded-l-md border-gray-300 focus:border-blue-500 focus:ring-blue-500">
+                        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-r-md hover:bg-blue-700">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Categories Widget -->
+            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Categories</h3>
+                <div class="space-y-2">
+                    {% for category in categories %}
+                    <a href="{% url 'category_detail' category.slug %}" 
+                       class="block px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md">
+                        {{ category.title }}
+                        <span class="float-right text-gray-500 text-sm">{{ category.posts.count }}</span>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Newsletter Widget -->
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Newsletter</h3>
+                <p class="text-gray-600 mb-4">Subscribe to our newsletter and stay updated with our latest posts!</p>
+                <form method="post" action="{% url 'newsletter_signup' %}">
+                    {% csrf_token %}
+                    <input type="email" name="email" placeholder="Your email address" required
+                           class="w-full rounded-md border-gray-300 mb-3 focus:border-blue-500 focus:ring-blue-500">
+                    <button type="submit" 
+                            class="w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                        Subscribe
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

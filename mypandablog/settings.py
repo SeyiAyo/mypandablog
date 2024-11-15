@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-dutyiwb0-kx^dli$a1iw$bql%s0t1*@swpyw^zu8+f6)1uaicn')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DJANGO_DEBUG', 'False') == 'True'
+DEBUG = True
 
 ALLOWED_HOSTS = ['mailstation.tech', 'mypandablog-brxj.zeet-panda-team.zeet.app', 'localhost', '127.0.0.1']
 CSRF_TRUSTED_ORIGINS = ['https://mypandablog-brxj.zeet-panda-team.zeet.app', 'https://mailstation.tech']
@@ -177,6 +177,12 @@ CACHES = {
     }
 }
 
+# Email settings
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # For development
+DEFAULT_FROM_EMAIL = 'noreply@mypandablog.com'
+SERVER_EMAIL = 'server@mypandablog.com'
+EMAIL_SUBJECT_PREFIX = '[MyPandaBlog] '
+
 # Logging configuration
 LOGGING = {
     'version': 1,
@@ -206,10 +212,43 @@ AUTHENTICATION_BACKENDS = [
 SITE_ID = 1
 
 # django-allauth settings
+ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
 ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_VERIFICATION = 'optional'
+ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = True
+ACCOUNT_USERNAME_MIN_LENGTH = 4
+LOGIN_REDIRECT_URL = '/'
+ACCOUNT_LOGOUT_REDIRECT_URL = '/'
+ACCOUNT_LOGOUT_ON_GET = True  # Enable logout on GET request
+ACCOUNT_PRESERVE_USERNAME_CASING = False
+ACCOUNT_SESSION_REMEMBER = True
+ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USERNAME_REQUIRED = True
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
-ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+
+# Message settings
+MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
+
+# Authentication URLs and Settings
+LOGOUT_REDIRECT_URL = 'frontpage'
+ACCOUNT_LOGOUT_ON_GET = True  # Allow logout on GET request for simplicity
+ACCOUNT_SIGNUP_REDIRECT_URL = 'profile'
+ACCOUNT_USERNAME_MIN_LENGTH = 4
+ACCOUNT_PASSWORD_MIN_LENGTH = 8
+ACCOUNT_RATE_LIMITS = {
+    # 5 failed attempts in 5 minutes
+    'login_failed': '5/5m',
+    # 3 sign ups per IP per day
+    'signup': '3/d',
+    # 3 password reset requests per IP per day
+    'reset_password': '3/d',
+}
+
+# Custom forms
+ACCOUNT_FORMS = {
+    'login': 'blog.forms.CustomLoginForm',
+    'signup': 'blog.forms.CustomSignupForm',
+    'reset_password': 'blog.forms.CustomPasswordResetForm',
+}
 
 # Crispy Forms
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
@@ -227,6 +266,10 @@ CKEDITOR_CONFIGS = {
 INTERNAL_IPS = [
     '127.0.0.1',
 ]
+
+DEBUG_TOOLBAR_CONFIG = {
+    'SHOW_TOOLBAR_CALLBACK': lambda request: DEBUG,
+}
 
 # Static files
 STATICFILES_FINDERS = [
