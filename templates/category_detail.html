@@ -13,7 +13,7 @@
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {% for post in category.posts.all %}
+        {% for post in posts %}
             <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
                 {% if post.image %}
                     <img src="{{ post.image.url }}" alt="{{ post.title }}" class="w-full h-48 object-cover">
@@ -24,7 +24,7 @@
                         <span class="text-gray-500 text-sm ml-4">{{ post.created_at|date }}</span>
                     </div>
                     <h3 class="text-xl font-bold text-gray-900 mb-2">
-                        <a href="{% url 'post_detail' post.category.slug post.slug %}" class="hover:text-blue-600">{{ post.title }}</a>
+                        <a href="{% url 'blog:post_detail' post.category.slug post.slug %}" class="hover:text-blue-600">{{ post.title }}</a>
                     </h3>
                     <p class="text-gray-600 mb-4">{{ post.intro|truncatewords:25 }}</p>
                     <div class="flex items-center justify-between">
@@ -32,9 +32,19 @@
                             <img src="{% static 'images/default-avatar.png' %}" alt="{{ post.author }}" class="w-8 h-8 rounded-full">
                             <span class="text-sm text-gray-600 ml-2">{{ post.author }}</span>
                         </div>
-                        <div class="flex items-center text-sm text-gray-500">
-                            <i class="far fa-eye mr-1"></i>
-                            <span>{{ post.get_hit_count }}</span>
+                        <div class="flex items-center space-x-4 text-sm text-gray-500">
+                            <div class="flex items-center">
+                                <i class="far fa-eye mr-1"></i>
+                                {{ post.views_count }}
+                            </div>
+                            <div class="flex items-center">
+                                <i class="far fa-comments mr-1"></i>
+                                {{ post.comment_count }}
+                            </div>
+                            <div class="flex items-center">
+                                <i class="far fa-clock mr-1"></i>
+                                {{ post.reading_time }} min
+                            </div>
                         </div>
                     </div>
                 </div>

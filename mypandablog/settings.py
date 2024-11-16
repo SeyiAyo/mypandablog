@@ -92,7 +92,9 @@ ROOT_URLCONF = 'mypandablog.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, ''), os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [
+            BASE_DIR / 'templates',
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -100,7 +102,15 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'blog.context_processors.base_context',
             ],
+            'builtins': [
+                'django.template.defaulttags',
+                'django.template.defaultfilters',
+            ],
+            'libraries': {
+                'length_is': 'django.template.defaultfilters',
+            },
         },
     },
 ]
@@ -168,8 +178,24 @@ CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
         'LOCATION': 'unique-snowflake',
+        'TIMEOUT': 60 * 15,  # 15 minutes
+        'OPTIONS': {
+            'MAX_ENTRIES': 1000
+        }
     }
 }
+
+# Cache middleware settings
+CACHE_MIDDLEWARE_ALIAS = 'default'
+CACHE_MIDDLEWARE_SECONDS = 60 * 15  # 15 minutes
+CACHE_MIDDLEWARE_KEY_PREFIX = ''
+
+# Don't cache pages with session data or POST requests
+CACHE_MIDDLEWARE_ANONYMOUS_ONLY = True
+
+# Cache configuration for specific views
+CACHE_CONTROL_MAX_AGE = 60 * 15  # 15 minutes for most pages
+CACHE_CONTROL_PRIVATE = True  # Prevents caching by intermediate proxies
 
 # Email settings
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # For development
@@ -228,14 +254,63 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 # Django CKEditor 5 configuration
 CKEDITOR_5_CONFIGS = {
     'default': {
-        'toolbar': ['heading', '|', 'bold', 'italic', 'link',
-                   'bulletedList', 'numberedList', 'blockQuote', 'imageUpload', '|',
-                   'code', 'codeBlock', '|',
-                   'insertTable', '|',
-                   'undo', 'redo'],
-        'height': '400px',
+        'toolbar': [
+            'heading', '|',
+            'bold', 'italic', 'underline', 'strikethrough', 'link', '|',
+            'bulletedList', 'numberedList', '|',
+            'blockQuote', 'imageUpload', '|',
+            'code', 'codeBlock', '|',
+            'insertTable', 'tableColumn', 'tableRow', 'mergeTableCells', '|',
+            'undo', 'redo', '|',
+            'alignment', 'fontColor', 'fontBackgroundColor', '|',
+            'horizontalLine', 'specialCharacters'
+        ],
+        'height': '600px',
         'width': '100%',
-    },
+        'removePlugins': ['Title'],
+        'heading': {
+            'options': [
+                {'model': 'paragraph', 'title': 'Paragraph', 'class': 'ck-heading_paragraph'},
+                {'model': 'heading1', 'view': 'h1', 'title': 'Heading 1', 'class': 'ck-heading_heading1'},
+                {'model': 'heading2', 'view': 'h2', 'title': 'Heading 2', 'class': 'ck-heading_heading2'},
+                {'model': 'heading3', 'view': 'h3', 'title': 'Heading 3', 'class': 'ck-heading_heading3'}
+            ]
+        },
+        'image': {
+            'toolbar': [
+                'imageStyle:inline', 'imageStyle:block', 'imageStyle:side', '|',
+                'toggleImageCaption', 'imageTextAlternative', '|',
+                'linkImage'
+            ]
+        },
+        'table': {
+            'contentToolbar': [
+                'tableColumn', 'tableRow', 'mergeTableCells',
+                'tableProperties', 'tableCellProperties'
+            ]
+        },
+        'fontSize': {
+            'options': [
+                'default',
+                9,
+                11,
+                13,
+                'default',
+                17,
+                19,
+                21
+            ]
+        },
+        'fontColor': {
+            'colors': [
+                {'color': '#000000', 'label': 'Black', 'default': True},
+                {'color': '#4B5563', 'label': 'Gray 600'},
+                {'color': '#1F2937', 'label': 'Gray 800'},
+                {'color': '#2563EB', 'label': 'Blue 600'},
+                {'color': '#DC2626', 'label': 'Red 600'}
+            ]
+        }
+    }
 }
 
 CKEDITOR_5_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
@@ -266,86 +341,46 @@ COMPRESS_CSS_FILTERS = [
 
 # Jazzmin Settings
 JAZZMIN_SETTINGS = {
-    # title of the window (Will default to current_admin_site.site_title if absent or None)
+    # title of the window
     "site_title": "MyPandaBlog Admin",
-    # Title on the login screen (19 chars max) (will default to current_admin_site.site_header if absent or None)
-    "site_header": "MyPandaBlog",
-    # Title on the brand (19 chars max) (will default to current_admin_site.site_header if absent or None)
+    
+    # Title on the login screen
+    "site_header": "MyPandaBlog Admin",
+
+    # Title on the brand (19 chars max)
     "site_brand": "MyPandaBlog",
-    # Logo to use for your site, must be present in static files, used for brand on top left
-    # "site_logo": "books/img/logo.png",
+
     # Welcome text on the login screen
-    "welcome_sign": "Welcome to MyPandaBlog Admin",
+    "welcome_sign": "Welcome to MyPandaBlog",
+
     # Copyright on the footer
-    "copyright": "MyPandaBlog - All rights reserved",
-    # List of model admins to search from the search bar, search bar omitted if excluded
-    # If you want to use a single search field you dont need to use a list, you can use a simple string 
-    "search_model": ["blog.Post", "blog.Category", "blog.Comment"],
-    # Field name on user model that contains avatar ImageField/URLField/Charfield or a callable that receives the user
-    "user_avatar": None,
-    ############
-    # Top Menu #
-    ############
+    "copyright": "MyPandaBlog",
+
+    # The model admin to search from the search bar
+    "search_model": "auth.User",
+
     # Links to put along the top menu
     "topmenu_links": [
-        # Url that gets reversed (Permissions can be added)
-        {"name": "Home",  "url": "admin:index", "permissions": ["auth.view_user"]},
-        # external url that opens in a new window (Permissions can be added)
-        {"name": "View Site", "url": "/", "new_window": True},
-        {"model": "blog.Post"},
-        {"model": "blog.Category"},
+        {"name": "Home", "url": "admin:index"},
+        {"name": "View Site", "url": "/"},
     ],
-    #############
-    # Side Menu #
-    #############
-    # Whether to display the side menu
-    "show_sidebar": True,
-    # Whether to aut expand the menu
-    "navigation_expanded": True,
-    # Custom icons for side menu apps/models
-    "icons": {
-        "auth": "fas fa-users-cog",
-        "auth.user": "fas fa-user",
-        "blog.Post": "fas fa-newspaper",
-        "blog.Category": "fas fa-list",
-        "blog.Comment": "fas fa-comments",
-        "blog.Newsletter": "fas fa-envelope",
-        "blog.PostView": "fas fa-eye",
-    },
-    # Icons that are used when one is not manually specified
-    "default_icon_parents": "fas fa-chevron-circle-right",
-    "default_icon_children": "fas fa-circle",
-    #################
-    # Related Modal #
-    #################
-    # Use modals instead of popups
-    "related_modal_active": True,
-    #############
-    # UI Tweaks #
-    #############
-    # Relative paths to custom CSS/JS scripts (must be present in static files)
-    # "custom_css": "css/admin.css",
-    # "custom_js": "js/admin.js",
+
+    # Use a custom theme
+    "theme": "cyborg",
+
     # Whether to show the UI customizer on the sidebar
-    "show_ui_builder": True,
-    ###############
-    # Change view #
-    ###############
-    # Render out the change view as a single form, or in tabs, current options are
-    # - single
-    # - horizontal_tabs (default)
-    # - vertical_tabs
-    # - collapsible
-    # - carousel
-    "changeform_format": "horizontal_tabs",
-    # override change forms on a per modeladmin basis
+    "show_ui_builder": False,
+
+    # Change view settings
+    "changeform_format": "single",
     "changeform_format_overrides": {
-        "auth.user": "collapsible",
-        "auth.group": "vertical_tabs",
+        "auth.user": "single",
+        "auth.group": "single",
+        "blog.post": "single",
+        "blog.category": "single",
     },
 }
 
-# UI Customizer
 JAZZMIN_UI_TWEAKS = {
     "navbar_small_text": False,
     "footer_small_text": False,
@@ -358,11 +393,11 @@ JAZZMIN_UI_TWEAKS = {
     "navbar_fixed": False,
     "layout_boxed": False,
     "footer_fixed": False,
-    "sidebar_fixed": True,
+    "sidebar_fixed": False,
     "sidebar": "sidebar-dark-primary",
     "sidebar_nav_small_text": False,
     "sidebar_disable_expand": False,
-    "sidebar_nav_child_indent": True,
+    "sidebar_nav_child_indent": False,
     "sidebar_nav_compact_style": False,
     "sidebar_nav_legacy_style": False,
     "sidebar_nav_flat_style": False,
