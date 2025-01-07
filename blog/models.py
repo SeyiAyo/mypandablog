@@ -14,6 +14,10 @@ class Category(models.Model):
     class Meta:
         ordering = ["title"]
         verbose_name_plural = "Categories"
+        indexes = [
+            models.Index(fields=['title']),
+            models.Index(fields=['slug']),
+        ]
     
     def __str__(self):
         return self.title
