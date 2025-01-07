@@ -14,21 +14,34 @@ from django.db.models import Count
 
 def frontpage(request):
     """View for the front page of the blog."""
-    featured_posts = Post.objects.filter(status=Post.ACTIVE, featured=True).select_related(
+    # Get cached categories or fetch and cache them
+    categories = cache.get('all_categories')
+    if categories is None:
+        categories = Category.objects.annotate(
+            post_count=Count('posts', filter=Q(posts__status=Post.ACTIVE))
+        ).order_by('title')
+        cache.set('all_categories', categories, 60 * 60)  # Cache for 1 hour
+    
+    featured_posts = Post.objects.filter(
+        status=Post.ACTIVE, 
+        featured=True
+    ).select_related(
         'category'
+    ).prefetch_related(
+        'tags'
     ).annotate(
         comment_count=Count('comments', filter=Q(comments__is_approved=True))
     ).order_by('-created_at')[:3]
     
-    posts = Post.objects.filter(status=Post.ACTIVE).select_related(
+    posts = Post.objects.filter(
+        status=Post.ACTIVE
+    ).select_related(
         'category'
+    ).prefetch_related(
+        'tags'
     ).annotate(
         comment_count=Count('comments', filter=Q(comments__is_approved=True))
     ).order_by('-created_at')
-    
-    categories = Category.objects.all().annotate(
-        post_count=Count('posts', filter=Q(posts__status=Post.ACTIVE))
-    )
 
     # Pagination
     paginator = Paginator(posts, 10)
@@ -60,20 +73,27 @@ def contact(request):
 
 def post_detail(request, category_slug, post_slug):
     """Display a single post with its comments and recommendations."""
-    post = get_object_or_404(
-        Post.objects.select_related('category').prefetch_related(
-            Prefetch(
-                'comments',
-                queryset=Comment.objects.filter(is_approved=True).order_by('-created_at'),
-                to_attr='approved_comments'
-            )
-        ).annotate(
-            comment_count=Count('comments', filter=Q(comments__is_approved=True))
-        ),
-        category__slug=category_slug,
-        slug=post_slug,
-        status=Post.ACTIVE
-    )
+    # Try to get post from cache
+    cache_key = f'post_{category_slug}_{post_slug}'
+    post = cache.get(cache_key)
+    
+    if post is None:
+        post = get_object_or_404(
+            Post.objects.select_related('category').prefetch_related(
+                Prefetch(
+                    'comments',
+                    queryset=Comment.objects.filter(is_approved=True).order_by('-created_at'),
+                    to_attr='approved_comments'
+                ),
+                'tags'
+            ).annotate(
+                comment_count=Count('comments', filter=Q(comments__is_approved=True))
+            ),
+            category__slug=category_slug,
+            slug=post_slug,
+            status=Post.ACTIVE
+        )
+        cache.set(cache_key, post, 60 * 15)  # Cache for 15 minutes
     
     # Track post view
     if not request.session.session_key:
@@ -92,49 +112,47 @@ def post_detail(request, category_slug, post_slug):
     # Check if post is saved by current IP
     is_saved = SavedPost.objects.filter(post=post, ip_address=ip_address).exists()
     
+    # Get related posts based on tags
+    post_tags_ids = post.tags.values_list('id', flat=True)
+    related_posts = Post.objects.filter(
+        status=Post.ACTIVE,
+        tags__in=post_tags_ids
+    ).exclude(
+        id=post.id
+    ).select_related(
+        'category'
+    ).prefetch_related(
+        'tags'
+    ).annotate(
+        same_tags=Count('tags')
+    ).order_by('-same_tags', '-created_at')[:3]
+    
     # Handle form submissions
     if request.method == 'POST':
         if 'save_post' in request.POST:
-            try:
-                if is_saved:
-                    SavedPost.objects.filter(post=post, ip_address=ip_address).delete()
-                    messages.success(request, 'Post removed from saved items.')
-                else:
-                    SavedPost.objects.create(post=post, ip_address=ip_address)
-                    messages.success(request, 'Post saved successfully!')
-                return redirect('blog:post_detail', category_slug=category_slug, post_slug=post_slug)
-            except Exception as e:
-                messages.error(request, 'An error occurred while saving the post.')
-                return redirect('blog:post_detail', category_slug=category_slug, post_slug=post_slug)
+            if is_saved:
+                SavedPost.objects.filter(post=post, ip_address=ip_address).delete()
+                messages.success(request, 'Post removed from saved items.')
+            else:
+                SavedPost.objects.create(post=post, ip_address=ip_address)
+                messages.success(request, 'Post saved successfully.')
+            return redirect('post_detail', category_slug=category_slug, post_slug=post_slug)
         
-        # Handle comment form
         form = CommentForm(request.POST)
         if form.is_valid():
             comment = form.save(commit=False)
             comment.post = post
-            
-            # Get sentiment of comment
-            sentiment = get_sentiment(comment.contents)
-            comment.sentiment = sentiment
-            comment.is_approved = True
-            
             comment.save()
-            messages.success(request, 'Your comment has been posted successfully!')
-            return redirect('blog:post_detail', category_slug=category_slug, post_slug=post_slug)
-        else:
-            messages.error(request, 'Please correct the errors in your comment.')
+            messages.success(request, 'Your comment has been submitted for approval.')
+            return redirect('post_detail', category_slug=category_slug, post_slug=post_slug)
     else:
         form = CommentForm()
     
-    # Get recommended posts
-    recommended_posts = recommend_posts(post)
-    
     context = {
         'post': post,
-        'comments': post.approved_comments,
         'form': form,
-        'recommended_posts': recommended_posts,
         'is_saved': is_saved,
+        'related_posts': related_posts,
     }
     
     return render(request, 'post_detail.html', context)
