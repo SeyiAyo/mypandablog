@@ -60,3 +60,9 @@ Watching for file changes with StatReloader
 "GET /static/js/main.js HTTP/1.1" 200 7845
 "GET /static/images/default-avatar.png HTTP/1.1" 200 1122
 "GET /static/images/favicon.png HTTP/1.1" 200 14904
+"GET /programming/python-vs-javascript-a-developers-guide/ HTTP/1.1" 200 19037
+"GET /static/css/main.css HTTP/1.1" 304 0
+"GET /static/js/main.js HTTP/1.1" 304 0
+"GET /static/images/default-avatar.png HTTP/1.1" 304 0
+"GET /static/images/favicon.png HTTP/1.1" 304 0
+"GET /programming/python-vs-javascript-a-developers-guide/?page=2 HTTP/1.1" 200 19073
