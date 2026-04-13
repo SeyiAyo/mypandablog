@@ -25,17 +25,21 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-dutyiwb0-kx^dl
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['mailstation.tech', 'mypandablog-brxj.zeet-panda-team.zeet.app', 'localhost', '127.0.0.1']
-CSRF_TRUSTED_ORIGINS = ['https://mypandablog-brxj.zeet-panda-team.zeet.app', 'https://mailstation.tech']
-CSRF_ALLOWED_ORIGINS = ['https://mypandablog-brxj.zeet-panda-team.zeet.app', 'https://mailstation.tech']
-CORS_ORIGINS_WHITELIST = ['https://mypandablog-brxj.zeet-panda-team.zeet.app', 'https://mailstation.tech']
-CORS_ALLOWED_ORIGINS = ['https://mypandablog-brxj.zeet-panda-team.zeet.app', 'https://mailstation.tech']
+ALLOWED_HOSTS = ['*']
+REPLIT_DEV_DOMAIN = os.environ.get('REPLIT_DEV_DOMAIN', '')
+CSRF_TRUSTED_ORIGINS = [
+    'https://mailstation.tech',
+    'https://mypandablog-brxj.zeet-panda-team.zeet.app',
+] + ([f'https://{REPLIT_DEV_DOMAIN}'] if REPLIT_DEV_DOMAIN else [])
+CSRF_ALLOWED_ORIGINS = CSRF_TRUSTED_ORIGINS
+CORS_ORIGINS_WHITELIST = CSRF_TRUSTED_ORIGINS
+CORS_ALLOWED_ORIGINS = CSRF_TRUSTED_ORIGINS
 
 # SECURE_SSL_REDIRECT = True
 
-# Use secure cookies in production
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
+# Use secure cookies in production (disable for dev on Replit)
+SESSION_COOKIE_SECURE = not DEBUG
+CSRF_COOKIE_SECURE = not DEBUG
 
 # Use HTTPOnly cookies
 SESSION_COOKIE_HTTPONLY = True
