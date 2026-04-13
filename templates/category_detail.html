@@ -26,11 +26,10 @@
                     <h3 class="text-xl font-bold text-gray-900 mb-2">
                         <a href="{% url 'blog:post_detail' post.category.slug post.slug %}" class="hover:text-blue-600">{{ post.title }}</a>
                     </h3>
-                    <p class="text-gray-600 mb-4">{{ post.intro|truncatewords:25 }}</p>
+                    <p class="text-gray-600 mb-4">{{ post.intro|striptags|truncatewords:25 }}</p>
                     <div class="flex items-center justify-between">
                         <div class="flex items-center">
-                            <img src="{% static 'images/default-avatar.png' %}" alt="{{ post.author }}" class="w-8 h-8 rounded-full">
-                            <span class="text-sm text-gray-600 ml-2">{{ post.author }}</span>
+                            <img src="{% static 'images/default-avatar.png' %}" alt="Author avatar" class="w-8 h-8 rounded-full">
                         </div>
                         <div class="flex items-center space-x-4 text-sm text-gray-500">
                             <div class="flex items-center">
@@ -54,29 +53,9 @@
 
     <!-- Pagination -->
     {% if posts.has_other_pages %}
-        <div class="flex justify-center space-x-1 py-8">
-            {% if posts.has_previous %}
-                <a href="?page={{ posts.previous_page_number }}" class="px-4 py-2 text-gray-700 bg-gray-200 rounded-md hover:bg-blue-600 hover:text-white">
-                    Previous
-                </a>
-            {% endif %}
-
-            {% for num in posts.paginator.page_range %}
-                {% if posts.number == num %}
-                    <span class="px-4 py-2 text-white bg-blue-600 rounded-md">{{ num }}</span>
-                {% else %}
-                    <a href="?page={{ num }}" class="px-4 py-2 text-gray-700 bg-gray-200 rounded-md hover:bg-blue-600 hover:text-white">
-                        {{ num }}
-                    </a>
-                {% endif %}
-            {% endfor %}
-
-            {% if posts.has_next %}
-                <a href="?page={{ posts.next_page_number }}" class="px-4 py-2 text-gray-700 bg-gray-200 rounded-md hover:bg-blue-600 hover:text-white">
-                    Next
-                </a>
-            {% endif %}
-        </div>
+    <div class="mt-8">
+        {% include 'pagination.html' with page=posts %}
+    </div>
     {% endif %}
 </div>
 {% endblock %}

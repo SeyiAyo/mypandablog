@@ -78,3 +78,41 @@ Not Found: /wrong/my-post/
 Not Found: /category/unknown/
 Not Found: /tech/draft/
 Not Found: /wrong/my-post/
+"GET / HTTP/1.1" 200 29740
+"GET /static/css/main.css HTTP/1.1" 200 4792
+"GET /static/images/default-avatar.png HTTP/1.1" 200 1122
+"GET /static/images/favicon.png HTTP/1.1" 200 14904
+"GET /static/js/main.js HTTP/1.1" 200 7845
+/home/runner/workspace/blog/models.py changed, reloading.
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 29795
+"GET /static/css/main.css HTTP/1.1" 304 0
+"GET /static/js/main.js HTTP/1.1" 304 0
+"GET /static/images/default-avatar.png HTTP/1.1" 304 0
+"GET /static/images/favicon.png HTTP/1.1" 304 0
+/home/runner/workspace/blog/views.py changed, reloading.
+Watching for file changes with StatReloader
+Not Found: /category/unknown/
+Not Found: /tech/draft/
+Not Found: /wrong/my-post/
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 29436
+"GET /static/css/main.css HTTP/1.1" 200 4792
+"GET /static/images/default-avatar.png HTTP/1.1" 200 1122
+"GET /static/js/main.js HTTP/1.1" 200 7845
+"GET /static/css/main.css HTTP/1.1" 304 0
+"GET /static/js/main.js HTTP/1.1" 304 0
+"GET /static/images/default-avatar.png HTTP/1.1" 304 0
+"GET /static/images/favicon.png HTTP/1.1" 304 0
+"GET /static/images/favicon.png HTTP/1.1" 200 14904
+Not Found: /category/unknown/
+Not Found: /tech/draft/
+Not Found: /wrong/my-post/
+Not Found: /category/unknown/
+Not Found: /tech/draft/
+Not Found: /wrong/my-post/
+Not Found: /category/unknown/
+Not Found: /tech/draft/
+Not Found: /wrong/my-post/
+"GET / HTTP/1.1" 200 29436
+"GET /search/?query=django HTTP/1.1" 200 14695

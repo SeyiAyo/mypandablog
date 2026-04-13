@@ -475,6 +475,18 @@ class PostDetailViewTests(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(Comment.objects.filter(post=self.post).count(), 1)
 
+    def test_comment_sentiment_score_saved(self):
+        url = reverse("blog:post_detail", kwargs={"category_slug": "tech", "post_slug": "my-post"})
+        self.client.post(url, {
+            "name": "Alice",
+            "email": "alice@example.com",
+            "contents": "This is absolutely wonderful and great!",
+        })
+        comment = Comment.objects.filter(post=self.post).first()
+        self.assertIsNotNone(comment)
+        self.assertIsNotNone(comment.sentiment_score)
+        self.assertIsInstance(comment.sentiment_score, float)
+
     def test_invalid_comment_does_not_save(self):
         url = reverse("blog:post_detail", kwargs={"category_slug": "tech", "post_slug": "my-post"})
         self.client.post(url, {"name": "", "email": "bad", "contents": ""})
@@ -567,7 +579,7 @@ class SearchViewTests(TestCase):
     def test_does_not_find_draft_posts(self):
         make_post(self.cat, title="Hidden Draft", slug="hidden-draft", status=Post.DRAFT)
         response = self.client.get(reverse("blog:search") + "?query=Hidden+Draft")
-        self.assertNotContains(response, "Hidden Draft")
+        self.assertNotContains(response, "/hidden-draft/")
 
     def test_query_in_context(self):
         response = self.client.get(reverse("blog:search") + "?query=hello")

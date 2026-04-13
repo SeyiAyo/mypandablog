@@ -114,8 +114,7 @@ def post_detail(request, category_slug, post_slug):
             comment.post = post
             
             # Get sentiment of comment
-            sentiment = get_sentiment(comment.contents)
-            comment.sentiment = sentiment
+            comment.sentiment_score = get_sentiment(comment.contents)
             comment.is_approved = True
             
             comment.save()

@@ -105,6 +105,7 @@ class Comment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     is_approved = models.BooleanField(default=True)
+    sentiment_score = models.FloatField(null=True, blank=True)
     
     class Meta:
         ordering = ["-created_at"]

@@ -1,35 +1,96 @@
 {% extends 'base.html' %}
+{% load static %}
 
-{% block title %}{{ category.title }}{% endblock %}
+{% block title %}Search Results{% endblock %}
 
 {% block content %}
-<!-- Posts Section -->
-<section class="w-full md:w-2/3 flex flex-col items-center px-3">
-    <div class="text-3xl font-bold hover:text-gray-700 pb-4">
-        Search results
-    </div>
-    {% for post in posts %}
-        <article class="flex flex-col shadow my-4">
-            <div class="bg-white flex flex-col justify-start p-6">
-                <a href="{% url 'blog:category_detail' post.category.slug %}" class="text-blue-700 text-sm font-bold uppercase pb-4">{{ post.category.title }}</a>
-                <a href="{% url 'blog:post_detail' post.category.slug post.slug %}" class="text-3xl font-bold hover:text-gray-700 pb-4">{{ post.title }}</a>
-                <p class="pb-6">{{ post.intro }}</p>
-                <a href="{% url 'blog:post_detail' post.category.slug post.slug %}" class="uppercase text-gray-800 hover:text-black">Continue Reading <i class="fas fa-arrow-right"></i></a>
-            </div>
-            {% empty %}
-            <div class="bg-white flex flex-col justify-start p-6">
-                <p>No results for the Search...</p>
-            </div>
-        </article>
-    {% endfor %}
+<div class="max-w-7xl mx-auto">
+    <div class="flex flex-col md:flex-row gap-8">
+        <!-- Results -->
+        <div class="w-full md:w-2/3">
+            <h2 class="text-2xl font-bold text-gray-900 mb-2">Search Results</h2>
+            {% if query %}
+            <p class="text-gray-500 mb-6">{{ posts|length }} result{{ posts|length|pluralize }} found</p>
+            {% else %}
+            <p class="text-gray-500 mb-6">Enter a term above to search all posts.</p>
+            {% endif %}
 
-
-        <!-- Pagination -->
-        <!-- <div class="flex items-center py-8">
-            <a href="#" class="h-10 w-10 bg-blue-800 hover:bg-blue-600 font-semibold text-white text-sm flex items-center justify-center">1</a>
-            <a href="#" class="h-10 w-10 font-semibold text-gray-800 hover:bg-blue-600 hover:text-white text-sm flex items-center justify-center">2</a>
-            <a href="#" class="h-10 w-10 font-semibold text-gray-800 hover:text-gray-900 text-sm flex items-center justify-center ml-3">Next <i class="fas fa-arrow-right ml-2"></i></a>
+            <div class="space-y-6">
+                {% for post in posts %}
+                <article class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                    <div class="md:flex">
+                        {% if post.image %}
+                        <div class="md:flex-shrink-0">
+                            <img src="{{ post.image.url }}" alt="{{ post.title }}" class="h-48 w-full md:w-48 object-cover">
+                        </div>
+                        {% endif %}
+                        <div class="p-6">
+                            <div class="flex items-center mb-2">
+                                <a href="{% url 'blog:category_detail' post.category.slug %}"
+                                   class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded hover:bg-blue-200">{{ post.category }}</a>
+                                <span class="text-gray-500 text-sm ml-4">{{ post.created_at|date }}</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-900 mb-2">
+                                <a href="{% url 'blog:post_detail' post.category.slug post.slug %}" class="hover:text-blue-600">{{ post.title }}</a>
+                            </h3>
+                            <p class="text-gray-600 mb-4">{{ post.intro|striptags|truncatewords:30 }}</p>
+                            <div class="flex items-center space-x-4 text-sm text-gray-500">
+                                <div class="flex items-center">
+                                    <i class="far fa-eye mr-1"></i>
+                                    {{ post.views_count }}
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="far fa-clock mr-1"></i>
+                                    {{ post.reading_time }} min read
+                                </div>
+                                <a href="{% url 'blog:post_detail' post.category.slug post.slug %}"
+                                   class="ml-auto text-blue-600 hover:text-blue-800 font-medium">
+                                    Read more <i class="fas fa-arrow-right ml-1"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+                {% empty %}
+                <div class="bg-white rounded-lg shadow-md p-12 text-center">
+                    <i class="fas fa-search text-4xl text-gray-300 mb-4"></i>
+                    <p class="text-gray-500 text-lg">No posts matched your search.</p>
+                    <p class="text-gray-400 mt-2">Try a different search term.</p>
+                </div>
+                {% endfor %}
+            </div>
         </div>
-```
-</section>
+
+        <!-- Sidebar -->
+        <div class="w-full md:w-1/3">
+            <!-- Search Widget -->
+            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Search</h3>
+                <form action="{% url 'blog:search' %}" method="get">
+                    <div class="flex">
+                        <input type="text" name="query" value="{{ query }}" placeholder="Search posts..."
+                               class="flex-1 rounded-l-md border-gray-300 focus:border-blue-500 focus:ring-blue-500">
+                        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-r-md hover:bg-blue-700">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Categories Widget -->
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Categories</h3>
+                <div class="space-y-2">
+                    {% for category in categories %}
+                    <a href="{% url 'blog:category_detail' category.slug %}"
+                       class="block px-3 py-2 text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-md">
+                        {{ category.title }}
+                        <span class="float-right text-gray-400">({{ category.post_count }})</span>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

@@ -23,13 +23,12 @@
                     <h3 class="text-xl font-bold text-gray-900 mb-2">
                         <a href="{% url 'blog:post_detail' post.category.slug post.slug %}" class="hover:text-blue-600">{{ post.title }}</a>
                     </h3>
-                    <p class="text-gray-600 mb-4">{{ post.intro|truncatewords:25 }}</p>
+                    <p class="text-gray-600 mb-4">{{ post.intro|striptags|truncatewords:25 }}</p>
                     <div class="flex items-center justify-between">
                         <div class="flex items-center">
-                            <img src="{% if post.author.userprofile.avatar %}{{ post.author.userprofile.avatar.url }}{% else %}{% static 'images/default-avatar.png' %}{% endif %}" 
-                                 alt="{{ post.author }}" 
+                            <img src="{% static 'images/default-avatar.png' %}" 
+                                 alt="Author avatar" 
                                  class="w-8 h-8 rounded-full">
-                            <span class="text-sm text-gray-600 ml-2">{{ post.author }}</span>
                         </div>
                         <div class="flex items-center space-x-4 text-sm text-gray-500">
                             <div class="flex items-center">
@@ -75,13 +74,12 @@
                             <h3 class="text-xl font-bold text-gray-900 mb-2">
                                 <a href="{% url 'blog:post_detail' post.category.slug post.slug %}" class="hover:text-blue-600">{{ post.title }}</a>
                             </h3>
-                            <p class="text-gray-600 mb-4">{{ post.intro|truncatewords:30 }}</p>
+                            <p class="text-gray-600 mb-4">{{ post.intro|striptags|truncatewords:30 }}</p>
                             <div class="flex items-center justify-between">
                                 <div class="flex items-center">
-                                    <img src="{% if post.author.userprofile.avatar %}{{ post.author.userprofile.avatar.url }}{% else %}{% static 'images/default-avatar.png' %}{% endif %}" 
-                                         alt="{{ post.author }}" 
+                                    <img src="{% static 'images/default-avatar.png' %}" 
+                                         alt="Author avatar" 
                                          class="w-8 h-8 rounded-full">
-                                    <span class="text-sm text-gray-600 ml-2">{{ post.author }}</span>
                                 </div>
                                 <div class="flex items-center space-x-4 text-sm text-gray-500">
                                     <div class="flex items-center">
