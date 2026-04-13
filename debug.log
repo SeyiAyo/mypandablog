@@ -66,3 +66,15 @@ Watching for file changes with StatReloader
 "GET /static/images/default-avatar.png HTTP/1.1" 304 0
 "GET /static/images/favicon.png HTTP/1.1" 304 0
 "GET /programming/python-vs-javascript-a-developers-guide/?page=2 HTTP/1.1" 200 19073
+Not Found: /category/unknown/
+Not Found: /tech/draft/
+Not Found: /wrong/my-post/
+Not Found: /category/unknown/
+Not Found: /tech/draft/
+Not Found: /wrong/my-post/
+Not Found: /category/unknown/
+Not Found: /tech/draft/
+Not Found: /wrong/my-post/
+Not Found: /category/unknown/
+Not Found: /tech/draft/
+Not Found: /wrong/my-post/
