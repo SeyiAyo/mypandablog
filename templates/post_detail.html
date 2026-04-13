@@ -148,36 +148,85 @@
             </div>
 
             <div class="mt-8 pt-8 border-t border-gray-200">
-                <div class="flex items-center justify-end space-x-4">
+                <div class="flex items-center justify-between flex-wrap gap-4">
+                    <!-- Save button -->
                     <form method="post" action="{% url 'blog:post_detail' post.category.slug post.slug %}" class="inline">
                         {% csrf_token %}
-                        <button type="submit" name="save_post" class="text-gray-500 hover:text-blue-600 transition-colors duration-200">
-                            <i class="{% if is_saved %}fas{% else %}far{% endif %} fa-bookmark mr-1"></i>
-                            {{ is_saved|yesno:"Saved,Save" }}
+                        <button type="submit" name="save_post" id="saveBtn"
+                                class="flex items-center gap-1 px-4 py-2 rounded-full border transition-colors duration-200
+                                       {% if is_saved %}bg-blue-600 text-white border-blue-600 hover:bg-blue-700{% else %}text-gray-500 border-gray-300 hover:text-blue-600 hover:border-blue-400{% endif %}">
+                            <i class="{% if is_saved %}fas{% else %}far{% endif %} fa-bookmark"></i>
+                            <span>{{ is_saved|yesno:"Saved,Save" }}</span>
                         </button>
                     </form>
-                    <div class="flex space-x-4">
-                        <a href="https://twitter.com/intent/tweet?text={{ post.title|urlencode }}&url={{ request.build_absolute_uri }}" 
-                           target="_blank" rel="noopener noreferrer"
-                           class="text-gray-500 hover:text-blue-600 transition-colors duration-200">
-                            <i class="fab fa-twitter mr-1"></i>
-                            Tweet
-                        </a>
-                        <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri|urlencode }}" 
-                           target="_blank" rel="noopener noreferrer"
-                           class="text-gray-500 hover:text-blue-600 transition-colors duration-200">
-                            <i class="fab fa-facebook mr-1"></i>
-                            Share
-                        </a>
-                        <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ request.build_absolute_uri|urlencode }}&title={{ post.title|urlencode }}" 
-                           target="_blank" rel="noopener noreferrer"
-                           class="text-gray-500 hover:text-blue-600 transition-colors duration-200">
-                            <i class="fab fa-linkedin mr-1"></i>
-                            Share
-                        </a>
+
+                    <!-- Share buttons -->
+                    <div class="flex items-center gap-3 flex-wrap">
+                        <span class="text-sm text-gray-400 font-medium">Share:</span>
+
+                        <button onclick="shareToTwitter()" title="Share on Twitter / X"
+                                class="flex items-center gap-1 px-3 py-2 rounded-full border border-gray-300 text-gray-500 hover:text-sky-500 hover:border-sky-400 transition-colors duration-200 text-sm">
+                            <i class="fab fa-x-twitter"></i>
+                            <span>Tweet</span>
+                        </button>
+
+                        <button onclick="shareToFacebook()" title="Share on Facebook"
+                                class="flex items-center gap-1 px-3 py-2 rounded-full border border-gray-300 text-gray-500 hover:text-blue-700 hover:border-blue-500 transition-colors duration-200 text-sm">
+                            <i class="fab fa-facebook"></i>
+                            <span>Facebook</span>
+                        </button>
+
+                        <button onclick="shareToLinkedIn()" title="Share on LinkedIn"
+                                class="flex items-center gap-1 px-3 py-2 rounded-full border border-gray-300 text-gray-500 hover:text-blue-600 hover:border-blue-500 transition-colors duration-200 text-sm">
+                            <i class="fab fa-linkedin"></i>
+                            <span>LinkedIn</span>
+                        </button>
+
+                        <button onclick="copyLink(this)" title="Copy link to clipboard"
+                                class="flex items-center gap-1 px-3 py-2 rounded-full border border-gray-300 text-gray-500 hover:text-green-600 hover:border-green-400 transition-colors duration-200 text-sm">
+                            <i class="fas fa-link"></i>
+                            <span>Copy link</span>
+                        </button>
                     </div>
                 </div>
             </div>
+
+            <script>
+                const postTitle = "{{ post.title|escapejs }}";
+
+                function shareToTwitter() {
+                    const url = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(postTitle) + '&url=' + encodeURIComponent(window.location.href);
+                    window.open(url, '_blank', 'width=600,height=400,noopener,noreferrer');
+                }
+
+                function shareToFacebook() {
+                    const url = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(window.location.href);
+                    window.open(url, '_blank', 'width=600,height=400,noopener,noreferrer');
+                }
+
+                function shareToLinkedIn() {
+                    const url = 'https://www.linkedin.com/shareArticle?mini=true&url=' + encodeURIComponent(window.location.href) + '&title=' + encodeURIComponent(postTitle);
+                    window.open(url, '_blank', 'width=600,height=500,noopener,noreferrer');
+                }
+
+                function copyLink(btn) {
+                    navigator.clipboard.writeText(window.location.href).then(function() {
+                        const span = btn.querySelector('span');
+                        const icon = btn.querySelector('i');
+                        const originalText = span.textContent;
+                        span.textContent = 'Copied!';
+                        icon.className = 'fas fa-check';
+                        btn.classList.add('text-green-600', 'border-green-400');
+                        setTimeout(function() {
+                            span.textContent = originalText;
+                            icon.className = 'fas fa-link';
+                            btn.classList.remove('text-green-600', 'border-green-400');
+                        }, 2000);
+                    }).catch(function() {
+                        prompt('Copy this link:', window.location.href);
+                    });
+                }
+            </script>
         </div>
     </article>
 
